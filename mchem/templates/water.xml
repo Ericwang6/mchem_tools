@@ -1,0 +1,9 @@
+<Residues>
+  <Residue name="HOH" altname1="SOL" altname2="WAT" >
+    <Atom name="O" altname1="OW" />
+    <Atom name="H1" altname1="HW1" />
+    <Atom name="H2" altname1="HW2" />
+    <Bond from="O" to="H1" order="1" />
+    <Bond from="O" to="H2" order="1" />
+  </Residue>
+</Residues>
