@@ -1,15 +1,3 @@
-class Term:
-    """
-    Base class for an energy term
-    """
-    def setParamIdx(self, idx: int):
-        self._idx = idx
-    
-    @property
-    def idx(self) -> int:
-        return self._idx
-
-
 class TermList(list):
     def __init__(self, cls):
         super().__init__()

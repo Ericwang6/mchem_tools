@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from .base import Term
 
 
 class MultipoleAxisType(Enum):
@@ -14,7 +13,7 @@ class MultipoleAxisType(Enum):
 
 
 @dataclass
-class Particle(Term):
+class Particle:
     idx: int
     name: str
     element: str
@@ -30,16 +29,17 @@ class Particle(Term):
 
 
 @dataclass
-class AmoebaVdw147(Term):
+class AmoebaVdw147:
     idx: int
     epsilon: float
     r0: float
     parentIdx: int = -1
     reduction: float = 0.0
+    paramIdx: int = -1
 
 
 @dataclass
-class Multipole(Term):
+class Multipole:
     idx: int
     c0: float
     dx: float
@@ -55,18 +55,54 @@ class Multipole(Term):
     kz: int = -1
     kx: int = -1
     ky: int = -1
+    paramIdx: int = -1
 
 
 @dataclass
-class IsotropicPolarization(Term):
+class IsotropicPolarization:
     idx: int
     alpha: float
     thole: float
     grp: list
+    paramIdx: int = -1
 
     def __post_init__(self):
         if isinstance(self.grp, str):
             self.grp = [int(x) for x in self.grp.split()]
+
+
+@dataclass
+class AnisotropicPolarization:
+    idx: int
+    alphaxx: float
+    alphaxy: float
+    alphaxz: float
+    alphayy: float
+    alphayz: float
+    alphazz: float
+    thole: float
+    grp: list = []
+    paramIdx: int = -1
+
+    def __post_init__(self):
+        if isinstance(self.grp, str):
+            self.grp = [int(x) for x in self.grp.split()]
+
+
+@dataclass
+class MBUCBChargePenetration:
+    idx: int
+    alpha: float
+    beta: float
+    paramIdx: int = -1
+
+
+@dataclass
+class MBUCBChargeTransfer:
+    idx: int
+    d: float
+    b: float
+    paramIdx: int = -1
 
 
 @dataclass

@@ -2,7 +2,7 @@ import pytest
 from pathlib import Path
 
 from mchem.system import System
-from mchem.common import TermList
+from mchem.terms import TermList
 from mchem.terms import AmoebaBond, CMAPTable
 
 
