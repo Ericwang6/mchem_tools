@@ -81,7 +81,7 @@ class AnisotropicPolarization:
     alphayz: float
     alphazz: float
     thole: float
-    grp: list = []
+    grp: list = field(default_factory=list)
     paramIdx: int = -1
 
     def __post_init__(self):
@@ -102,6 +102,7 @@ class MBUCBChargeTransfer:
     idx: int
     d: float
     b: float
+    alpha: float
     paramIdx: int = -1
 
 

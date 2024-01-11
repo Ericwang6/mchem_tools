@@ -802,12 +802,12 @@ class AnisotropicPolarizationGenerator(Generator):
     
     def addPolarize(self, polarElement: ET.Element):
         paramDict = {
-            "alphaxx": str2float(polarElement.get("alphaxx")),
-            "alphaxy": str2float(polarElement.get("alphaxy")),
-            "alphaxz": str2float(polarElement.get("alphaxz")),
-            "alphayy": str2float(polarElement.get("alphayy")),
-            "alphayz": str2float(polarElement.get("alphayz")),
-            "alphazz": str2float(polarElement.get("alphazz")),
+            "alphaxx": str2float(polarElement.get("alphaxx", 0.0)),
+            "alphaxy": str2float(polarElement.get("alphaxy", 0.0)),
+            "alphaxz": str2float(polarElement.get("alphaxz", 0.0)),
+            "alphayy": str2float(polarElement.get("alphayy", 0.0)),
+            "alphayz": str2float(polarElement.get("alphayz", 0.0)),
+            "alphazz": str2float(polarElement.get("alphazz", 0.0)),
             "thole": str2float(polarElement.get("thole")),
             "grp": set(polarElement.get(attr) for attr in polarElement.attrib if attr.startswith("pgrp"))
         }
@@ -841,7 +841,7 @@ class AnisotropicPolarizationGenerator(Generator):
                 atom.setPolarizationGroup(group)
             
     def createTerms(self, topology: Topology, **kwargs):
-        polTerms = TermList(IsotropicPolarization)
+        polTerms = TermList(AnisotropicPolarization)
 
         useSmirks = kwargs.get("useSmirks", False)
         if useSmirks:
@@ -920,7 +920,7 @@ Parsers['MBUCBMultipoleForce'] = [
 
 class MBUCBChargeTransferGenerator(Generator):
     def __init__(self, ff):
-        super().__init__(ff, ['b', 'd'], False)
+        super().__init__(ff, ['b', 'd', 'alpha'], False)
     
     @staticmethod
     def parseElement(element: ET.Element, ff: ForceField):
@@ -931,7 +931,8 @@ class MBUCBChargeTransferGenerator(Generator):
     def addTerm(self, element: ET.Element):
         paramDict = {
             "b": str2float(element.get("b")),
-            "d": str2float(element.get("d"))
+            "d": str2float(element.get("d")),
+            "alpha": str2float(element.get("alpha"))
         }
         if "smirks" not in element.attrib:
             atypes = self.ff.findAtomTypes(element, 1)
@@ -955,7 +956,8 @@ class MBUCBChargeTransferGenerator(Generator):
                 term = MBUCBChargeTransfer(
                     atom.idx, 
                     param['d'], 
-                    param['b'], 
+                    param['b'],
+                    param['alpha'],
                     paramIdx=paramIdx
                 )
                 terms.append(term)

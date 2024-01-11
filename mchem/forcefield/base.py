@@ -173,6 +173,7 @@ class ForceField:
 
         self.assignAtomTypes(topology)
         system = System()
+        system.addMeta("name", topology.name)
         particles = TermList(Particle)
         for atom in topology.atoms():
             particles.append(Particle(
