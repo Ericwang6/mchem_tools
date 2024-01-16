@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from mchem.topology import Topology
 
 from ..topology import Topology
-from .base import ForceField, Generator, Parsers, str2float, str2bool, str2int
+from .base import ForceField, Generator, Parsers, str2float, str2bool, str2int, float2str
 from ..terms import (
     TermList,
     AmoebaBond, 
@@ -22,12 +22,12 @@ from ..terms import (
     AmoebaVdw147,
     Multipole,
     MultipoleAxisType,
+    MultipoleAxisTypeInt2Str,
     IsotropicPolarization,
     MBUCBChargePenetration,
     AnisotropicPolarization,
     MBUCBChargeTransfer
 )
-
 
 
 class AmoebaBondGenerator(Generator):
@@ -90,7 +90,7 @@ class AmoebaBondGenerator(Generator):
         return bondTerms
 
 
-Parsers["AmoebaBondForce"] = AmoebaBondGenerator.parseElement
+Parsers["AmoebaBondForce"] = AmoebaBondGenerator
 
 
 class AmoebaAngleGenerator(Generator):
@@ -184,7 +184,7 @@ class AmoebaAngleGenerator(Generator):
         # angleInPlaneTerms.sort(key=lambda t: (t.p0, t.p1, t.p2))
         return angleTerms, angleInPlaneTerms
 
-Parsers["AmoebaAngleForce"] = AmoebaAngleGenerator.parseElement
+Parsers["AmoebaAngleForce"] = AmoebaAngleGenerator
 
 
 class AmoebaUreyBradleyGenerator(Generator):
@@ -242,15 +242,13 @@ class AmoebaUreyBradleyGenerator(Generator):
         # ubTerms.sort(key=lambda t: (t.p0, t.p1))
         return ubTerms
     
-Parsers["AmoebaUreyBradleyForce"] = AmoebaUreyBradleyGenerator.parseElement
+Parsers["AmoebaUreyBradleyForce"] = AmoebaUreyBradleyGenerator
 
 
 class MultipoleGenerator(Generator):
     def __init__(self, ff):
         super().__init__(ff, [
-            'kz', 'kx', 'ky', 'axisType', 
-            'c0', 'dx', 'dy', 'dz', 
-            'qxx', 'qxy', 'qxz', 'qyy', 'qyz', 'qzz'
+            'kz', 'kx', 'ky', 'axisType', 'multipoles'
         ], False)
     
     @staticmethod
@@ -271,7 +269,7 @@ class MultipoleGenerator(Generator):
             axisType = MultipoleAxisType.Bisector.value
         if (kx < 0 and ky < 0):
             axisType = MultipoleAxisType.ZBisect.value
-        if (kz < 0 and kx < 0 and ky  < 0):
+        if (kz < 0 and kx < 0 and ky < 0):
             axisType = MultipoleAxisType.ThreeFold.value
         return axisType
 
@@ -279,22 +277,29 @@ class MultipoleGenerator(Generator):
         kz = str2int(mpoleElement.get("kz", 0))
         kx = str2int(mpoleElement.get("kx", 0))
         ky = str2int(mpoleElement.get("ky", 0))
-        axisType = MultipoleGenerator.setAxisType(kz, kx, ky)
+        
+        if "axistype" in mpoleElement.attrib:
+            axisType = MultipoleAxisType[mpoleElement.get("axistype")].value
+        else:
+            axisType = MultipoleGenerator.setAxisType(kz, kx, ky)
+        
         paramDict = {
             "kz": abs(kz) if kz else -1, 
             "kx": abs(kx) if kx else -1,
             "ky": abs(ky) if ky else -1,
             "axisType": axisType,
-            "c0": str2float(mpoleElement.get("c0")),
-            "dx": str2float(mpoleElement.get("d1")),
-            "dy": str2float(mpoleElement.get("d2")),
-            "dz": str2float(mpoleElement.get("d3")),
-            "qxx": str2float(mpoleElement.get("q11")),
-            "qxy": str2float(mpoleElement.get("q21")),
-            "qyy": str2float(mpoleElement.get("q22")),
-            "qxz": str2float(mpoleElement.get("q31")),
-            "qyz": str2float(mpoleElement.get("q32")),
-            "qzz": str2float(mpoleElement.get("q33")),
+            "multipoles": [
+                str2float(mpoleElement.get("c0")),
+                str2float(mpoleElement.get("d1")),
+                str2float(mpoleElement.get("d2")),
+                str2float(mpoleElement.get("d3")),
+                str2float(mpoleElement.get("q11")),
+                str2float(mpoleElement.get("q21")),
+                str2float(mpoleElement.get("q31")),
+                str2float(mpoleElement.get("q22")),
+                str2float(mpoleElement.get("q32")),
+                str2float(mpoleElement.get("q33")),
+            ]
         }
         if "smirks" not in mpoleElement.attrib:
             atypes = self.ff.findAtomTypes(mpoleElement, 1)
@@ -308,10 +313,29 @@ class MultipoleGenerator(Generator):
             self.addParameterWithAtomTypes(typeQuery, paramDict)
         else:
             raise NotImplementedError()
-            # self.addParameterWithSmirks(
-            #     mpoleElement.get("smirks"),
-            #     paramDict
-            # )
+    
+    def exportParameterToStr(self):
+        mpoleStrs = ['c0', 'd1', 'd2', 'd3', 'q11', 'q21', 'q31', 'q22', 'q32', 'q33']
+        strings = []
+        for key, value in self._with_atom_types.items():
+            atype = key[0]
+            kz = self._parameters['kz'][value]
+            kx = self._parameters['kx'][value]
+            ky = self._parameters['ky'][value]
+            typestr = f'type="{atype}"'
+            kzstr = f'kz="{kz if kz != -1 else 0}"'
+            kxstr = f'kx="{kx if kx != -1 else 0}"'
+            kystr = f'ky="{ky if ky != -1 else 0}"'
+            axisType = 'axistype="{}"'.format(MultipoleAxisTypeInt2Str[int(self._parameters['axisType'][value])])
+            mpoles = self._parameters['multipoles'][value]
+            elestr = f'\t\t<Multipole {typestr:<10} {kzstr:<8} {kxstr:<8} {kystr:<8} {axisType:<22}'
+            for i, mstr in enumerate(mpoleStrs):
+                mstr = f'{mstr}="{float2str(mpoles[i])}"'
+                elestr += f"{mstr:<23} "
+            elestr += "/>"
+            strings.append(elestr)
+        
+        return '\n'.join(strings)
     
     def createTerms(self, topology: Topology, **kwargs):
         mpoleTerms = TermList(Multipole)
@@ -362,9 +386,10 @@ class MultipoleGenerator(Generator):
                 
                 term = Multipole(
                     atom.idx,
-                    param['c0'],
-                    param['dx'], param['dy'], param['dz'],
-                    param['qxx'], param['qxy'], param['qxz'], param['qyy'], param['qyz'], param['qxz'],
+                    param["multipoles"][0],
+                    param["multipoles"][1], param["multipoles"][2], param["multipoles"][3],
+                    param["multipoles"][4], param["multipoles"][5], param["multipoles"][6], 
+                    param["multipoles"][7], param["multipoles"][8], param["multipoles"][9],
                     param['axisType'],
                     kz, kx, ky,
                     paramIdx=paramIdx
@@ -445,8 +470,8 @@ class IsotropicPolarizationGenerator(Generator):
     
 
 Parsers['AmoebaMultipoleForce'] = [
-    MultipoleGenerator.parseElement,
-    IsotropicPolarizationGenerator.parseElement
+    MultipoleGenerator,
+    IsotropicPolarizationGenerator
 ]
 
 
@@ -505,7 +530,7 @@ class AmoebaVdwGenerator(Generator):
 
         return vdwTerms
     
-Parsers['AmoebaVdwForce'] = AmoebaVdwGenerator.parseElement
+Parsers['AmoebaVdwForce'] = AmoebaVdwGenerator
 
 
 class AmoebaStretchBendGenerator(Generator):
@@ -593,7 +618,7 @@ class AmoebaStretchBendGenerator(Generator):
         # strbndTerms.sort(key=lambda t: (t.p0, t.p1, t.p2))
         return strbndTerms
 
-Parsers['AmoebaStretchBendForce'] = AmoebaStretchBendGenerator.parseElement
+Parsers['AmoebaStretchBendForce'] = AmoebaStretchBendGenerator
 
 
 class AmoebaOutOfPlaneBendGenerator(Generator):
@@ -668,7 +693,7 @@ class AmoebaOutOfPlaneBendGenerator(Generator):
         # opbendTerms.sort(key=lambda t: (t.p1, t.p0, t.p2, t.p3))
         return opbendTerms
 
-Parsers['AmoebaOutOfPlaneBendForce'] = AmoebaOutOfPlaneBendGenerator.parseElement
+Parsers['AmoebaOutOfPlaneBendForce'] = AmoebaOutOfPlaneBendGenerator
 
 
 class AmoebaPiTorsionGenerator(Generator):
@@ -728,7 +753,7 @@ class AmoebaPiTorsionGenerator(Generator):
         # pitorTerms.sort(key=lambda t: (t.p2, t.p3))
         return pitorTerms
 
-Parsers['AmoebaPiTorsionForce'] = AmoebaPiTorsionGenerator.parseElement
+Parsers['AmoebaPiTorsionForce'] = AmoebaPiTorsionGenerator
 
 
 class PeriodicTorsionGenerator(Generator):
@@ -787,12 +812,12 @@ class PeriodicTorsionGenerator(Generator):
         # torsionTerms.sort(key=lambda t: (t.p0, t.p1, t.p2, t.p3))
         return torsionTerms
     
-Parsers['PeriodicTorsionForce'] = PeriodicTorsionGenerator.parseElement
+Parsers['PeriodicTorsionForce'] = PeriodicTorsionGenerator
 
 
 class AnisotropicPolarizationGenerator(Generator):
     def __init__(self, ff):
-        super().__init__(ff, ["thole", "alphaxx", "alphaxy", "alphaxz", "alphayy", "alphayz", "alphazz", "grp"], True)
+        super().__init__(ff, ["thole", "alpha", "grp"], True)
     
     @staticmethod
     def parseElement(element: ET.Element, ff: ForceField):
@@ -802,12 +827,14 @@ class AnisotropicPolarizationGenerator(Generator):
     
     def addPolarize(self, polarElement: ET.Element):
         paramDict = {
-            "alphaxx": str2float(polarElement.get("alphaxx", 0.0)),
-            "alphaxy": str2float(polarElement.get("alphaxy", 0.0)),
-            "alphaxz": str2float(polarElement.get("alphaxz", 0.0)),
-            "alphayy": str2float(polarElement.get("alphayy", 0.0)),
-            "alphayz": str2float(polarElement.get("alphayz", 0.0)),
-            "alphazz": str2float(polarElement.get("alphazz", 0.0)),
+            "alpha": [
+                str2float(polarElement.get("alphaxx", 0.0)),
+                str2float(polarElement.get("alphaxy", 0.0)),
+                str2float(polarElement.get("alphaxz", 0.0)),
+                str2float(polarElement.get("alphayy", 0.0)),
+                str2float(polarElement.get("alphayz", 0.0)),
+                str2float(polarElement.get("alphazz", 0.0)),
+            ],
             "thole": str2float(polarElement.get("thole")),
             "grp": set(polarElement.get(attr) for attr in polarElement.attrib if attr.startswith("pgrp"))
         }
@@ -819,6 +846,21 @@ class AnisotropicPolarizationGenerator(Generator):
                 polarElement.get("smirks"),
                 paramDict
             )
+    
+    def exportParameterToStr(self):
+        strs = []
+        astrs = ['alphaxx', 'alphaxy', 'alphaxz', 'alphayy', 'alphayz', 'alphazz']
+        tholes = self._parameters['thole']
+        alphas = self._parameters['alpha']
+        for atype, index in self._with_atom_types.items():
+            typestr = f'type="{atype[0]}"'
+            alpha = alphas[index]
+            tholestr = f'thole="{float2str(tholes[index])}"'
+            alphastrs = [f'{astr}="{float2str(alpha[i])}"' for i, astr in enumerate(astrs)]
+            elestr = '\t\t<Polarize {:<10} {:<20} {} />'.format(typestr, tholestr, " ".join([f"{astr:<27}" for astr in alphastrs]))
+            strs.append(elestr)
+        
+        return '\n'.join(strs)
     
     def setPolarizationGroup(self, topology: Topology):
         import networkx as nx
@@ -856,8 +898,8 @@ class AnisotropicPolarizationGenerator(Generator):
                 group.sort()
                 term = AnisotropicPolarization(
                     atom.idx, 
-                    param['alphaxx'], param['alphaxy'], param['alphaxz'],
-                    param['alphayy'], param['alphayz'], param['alphazz'],  
+                    param['alpha'][0], param['alpha'][1], param['alpha'][2],
+                    param['alpha'][3], param['alpha'][4], param['alpha'][5],  
                     param['thole'], 
                     group,
                     paramIdx=paramIdx
@@ -889,6 +931,19 @@ class MBUCBChargePenetrationGenerator(Generator):
                 element.get("smirks"),
                 paramDict
             )
+    
+    def exportParameterToStr(self):
+        alphas = self._parameters['alpha']
+        betas = self._parameters['beta']
+        strs = []
+        for atype, index in self._with_atom_types.items():
+            typestr = f'type="{atype[0]}"'
+            alphastr = f'alpha="{float2str(alphas[index])}"'
+            betastr = f'beta="{float2str(betas[index])}"'
+            elestr = '\t\t<ChargePenetration {:<10} {:<20} {:<19} />'.format(typestr, alphastr, betastr)
+            strs.append(elestr)
+        
+        return '\n'.join(strs)
 
     def createTerms(self, topology: Topology, **kwargs):
         terms = TermList(MBUCBChargePenetration)
@@ -912,9 +967,9 @@ class MBUCBChargePenetrationGenerator(Generator):
 
 
 Parsers['MBUCBMultipoleForce'] = [
-    MultipoleGenerator.parseElement,
-    AnisotropicPolarizationGenerator.parseElement,
-    MBUCBChargePenetrationGenerator.parseElement
+    MultipoleGenerator,
+    AnisotropicPolarizationGenerator,
+    MBUCBChargePenetrationGenerator
 ]
 
 
@@ -942,7 +997,22 @@ class MBUCBChargeTransferGenerator(Generator):
                 element.get("smirks"),
                 paramDict
             )
-
+    
+    def exportParameterToStr(self):
+        ds = self._parameters['d']
+        bs = self._parameters['b']
+        alphas = self._parameters['alpha']
+        strs = []
+        for atype, index in self._with_atom_types.items():
+            typestr = f'type="{atype[0]}"'
+            bstr = f'b="{float2str(bs[index])}"'
+            dstr = f'd="{float2str(ds[index])}"'
+            alphastr = f'alpha="{float2str(alphas[index])}"'
+            elestr = '\t\t<ChargeTransfer {:<10} {:<16} {:<16} {:<25} />'.format(typestr, dstr, bstr, alphastr)
+            strs.append(elestr)
+        
+        return '\n'.join(strs)
+    
     def createTerms(self, topology: Topology, **kwargs):
         terms = TermList(MBUCBChargeTransfer)
 
@@ -965,4 +1035,4 @@ class MBUCBChargeTransferGenerator(Generator):
         return terms
 
 
-Parsers['MBUCBChargeTransferForce'] = MBUCBChargeTransferGenerator.parseElement
+Parsers['MBUCBChargeTransferForce'] = MBUCBChargeTransferGenerator

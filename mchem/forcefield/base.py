@@ -2,6 +2,7 @@ from typing import List, Dict, Any
 from dataclasses import dataclass
 from itertools import product, combinations
 import os
+import xml
 import xml.etree.ElementTree as ET
 import warnings
 
@@ -19,6 +20,13 @@ def str2int(string):
     return int(string)
 
 
+def float2str(number):
+    if number == 0.0 or abs(number) > 1e-5:
+        return f"{number:.10f}"
+    else:
+        return f"{number:.10e}"
+
+
 def str2bool(string):
     if string == "True" or string == "true":
         return True
@@ -26,6 +34,11 @@ def str2bool(string):
         return False
     else:
         raise ValueError(f"Could not convert string to bool: {string}")
+
+
+def xmlele2str(xmlele: ET.Element):
+    uglystr = ET.tostring(xmlele, "unicode")
+    return uglystr.strip()
 
 
 @dataclass
@@ -46,6 +59,7 @@ class ForceField:
         self.atomTypes: Dict[str, AtomType] = {}
         self.atomClasses: Dict[str, List[AtomType]] = {}
         self._generators: List[Generator] = []
+        self._forces: List[str] = []
         
         self.loadAtomTypes()
         self.loadAtomTypeDefs()
@@ -122,12 +136,17 @@ class ForceField:
         for tree in self.trees:
             for child in tree.getroot():
                 if child.tag in Parsers:
+                    self._forces.append(child.tag)
                     if isinstance(Parsers[child.tag], list):
                         for parser in Parsers[child.tag]:
-                            parser(child, self)
+                            parser.parseElement(child, self)
                     else:
-                        Parsers[child.tag](child, self)
-    
+                        Parsers[child.tag].parseElement(child, self)
+                elif child.tag in ["Info", "Residues", "AtomTypes"]:
+                    pass
+                else:
+                    raise ValueError(f"{child.tag} is not supported")
+
     def assignAtomTypes(self, topology: Topology):
         for res in topology.residues:
             if res.stdName not in TEMPLATES:
@@ -193,8 +212,59 @@ class ForceField:
                 system.addTerms(terms)
         return system
     
+    def getParameters(self, asJaxNumpy: bool = True):
+        params = {}
+        for generator in self.generators:
+            name = generator.__class__.__name__
+            params[name] = generator.getParameters(asJaxNumpy=asJaxNumpy)
+        self._parameters = params
+        return self._parameters
+    
+    def updateParameters(self, param: Dict[str, Any]):
+        for generator in self.generators:
+            name = generator.__class__.__name__
+            generator.updateParameters(param[name])
+    
+    def exportAtomTypes(self):
+        strs = []
+        for tree in self.trees:
+            atomTypes = tree.getroot().find("AtomTypes")
+            for atomTypeElement in atomTypes.findall("Type"):
+                strs.append(f'\t\t{xmlele2str(atomTypeElement)}')
+        atypestr = '\t<AtomTypes>\n{}\n\t</AtomTypes>'.format('\n'.join(strs))
+        return atypestr
+    
+    def exportAtomTypeDefs(self):
+        strs = []
+        for tree in self.trees:
+            residues = tree.getroot().find("Residues")
+            for res in residues.findall("Residue"):
+                restr = '\t\t<Residue name="{}" />\n{}\n\t\t</Residue>'.format(
+                    res.get("name"),
+                    '\n'.join(f'\t\t\t{xmlele2str(atomEle)}' for atomEle in res.findall("Atom"))
+                )
+                strs.append(restr)
+        return '\t<Residues>\n{}\n\t</Residues>'.format('\n'.join(strs))
 
+    def save(self, path: os.PathLike):
+        forcestrs = []
+        for force in self._forces:
+            if isinstance(Parsers[force], list):
+                forcestr = "\n".join([
+                    self.getGeneratorWithClass(gencls).exportParameterToStr() for gencls in Parsers[force]
+                ])
+            else:
+                forcestr = self.getGeneratorWithClass(Parsers[force]).exportParameterToStr()
+            forcestrs.append(f"\t<{force}>\n{forcestr}\n\t</{force}>")
+        ffstr = "<ForceField>\n{}\n{}\n{}\n</ForceField>".format(
+            self.exportAtomTypes(),
+            self.exportAtomTypeDefs(),
+            '\n'.join(forcestrs)
+        )
+        with open(path, 'w') as f:
+            f.write(ffstr)
 
+    
 class Generator:
     """
     Base class for a force generator
@@ -231,7 +301,7 @@ class Generator:
     
     def checkParameter(self, paramDict: Dict[str, Any]):
         keys = sorted(list(paramDict.keys()))
-        assert keys == self.paramFields, "Parameter fields does not match"
+        assert keys == self.paramFields, f"Parameter fields does not match {keys} != {self.paramFields}"
 
     def addParameterWithAtomTypes(self, typeOrtypes, paramDict: Dict[str, Any]):
         types = typeOrtypes if isinstance(typeOrtypes, list) else [typeOrtypes]
@@ -295,6 +365,22 @@ class Generator:
     def getParameterWithIdx(self, idx: int):
         return {k: self._parameters[k][idx] for k in self._parameters.keys()}
     
+    def getParameters(self, asJaxNumpy: bool = False):
+        if asJaxNumpy:
+            import jax.numpy as jnp    
+            jaxParam = {}
+            for key, value in self._parameters.items():
+                try:
+                    jaxParam[key] = jnp.array(value)
+                except TypeError as e:
+                    continue
+            return jaxParam
+        else:
+            return self._parameters
+    
+    def updateParameters(self, param: Dict[str, Any]):
+        self._parameters.update(param)
+
     def createTerms(self, topology: Topology, **kwargs):
         raise NotImplementedError()
 
@@ -303,3 +389,7 @@ class Generator:
             raise Exception(msg)
         else:
             warnings.warn(msg)
+    
+    def exportParameterToStr(self):
+        return ""
+        # raise NotImplementedError()

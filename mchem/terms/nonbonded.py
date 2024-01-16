@@ -11,6 +11,10 @@ class MultipoleAxisType(Enum):
     NoAxisType        = 5
     LastAxisTypeIndex = 6
 
+MultipoleAxisTypeInt2Str = {
+    at.value: at.name for at in MultipoleAxisType
+}
+
 
 @dataclass
 class Particle:
