@@ -477,7 +477,7 @@ Parsers['AmoebaMultipoleForce'] = [
 
 class AmoebaVdwGenerator(Generator):
     def __init__(self, ff):
-        super().__init__(ff, ['r0', 'epsilon', 'reduction'], True)
+        super().__init__(ff, ['sigma', 'epsilon', 'reduction'], True)
     
     @staticmethod
     def parseElement(element: ET.Element, ff: ForceField):
@@ -495,7 +495,7 @@ class AmoebaVdwGenerator(Generator):
     
     def addVdw(self, vdwElement: ET.Element):
         paramDict = {
-            "r0": str2float(vdwElement.get("sigma")), # TODO: sigma -> r0
+            "sigma": str2float(vdwElement.get("sigma")),
             "epsilon": str2float(vdwElement.get("epsilon")),
             "reduction": str2float(vdwElement.get('reduction'))
         }
@@ -525,7 +525,7 @@ class AmoebaVdwGenerator(Generator):
             else:
                 parentIdx = -1
             
-            term = AmoebaVdw147(atom.idx, param['epsilon'], param['r0'], parentIdx, param['reduction'], paramIdx=paramIdx)
+            term = AmoebaVdw147(atom.idx, param['epsilon'], param['sigma'], parentIdx, param['reduction'], paramIdx=paramIdx)
             vdwTerms.append(term)
 
         return vdwTerms
@@ -826,15 +826,21 @@ class AnisotropicPolarizationGenerator(Generator):
             generator.addPolarize(polar)
     
     def addPolarize(self, polarElement: ET.Element):
-        paramDict = {
-            "alpha": [
+        isoalpha = polarElement.get("polarizability", None)
+        if isoalpha is not None:
+            isoalpha = str2float(isoalpha)
+            alpha = [isoalpha, 0.0, 0.0, isoalpha, 0.0, isoalpha]
+        else:
+            alpha = [
                 str2float(polarElement.get("alphaxx", 0.0)),
                 str2float(polarElement.get("alphaxy", 0.0)),
                 str2float(polarElement.get("alphaxz", 0.0)),
                 str2float(polarElement.get("alphayy", 0.0)),
                 str2float(polarElement.get("alphayz", 0.0)),
                 str2float(polarElement.get("alphazz", 0.0)),
-            ],
+            ]
+        paramDict = {
+            "alpha": alpha,
             "thole": str2float(polarElement.get("thole")),
             "grp": set(polarElement.get(attr) for attr in polarElement.attrib if attr.startswith("pgrp"))
         }
@@ -910,7 +916,7 @@ class AnisotropicPolarizationGenerator(Generator):
     
 class MBUCBChargePenetrationGenerator(Generator):
     def __init__(self, ff):
-        super().__init__(ff, ['alpha', 'beta'], False)
+        super().__init__(ff, ['z', 'alpha', 'beta'], False)
     
     @staticmethod
     def parseElement(element: ET.Element, ff: ForceField):
@@ -920,6 +926,7 @@ class MBUCBChargePenetrationGenerator(Generator):
     
     def addTerm(self, element: ET.Element):
         paramDict = {
+            "z": str2float(element.get("z")),
             "alpha": str2float(element.get("alpha")),
             "beta": str2float(element.get("beta"))
         }
@@ -933,14 +940,16 @@ class MBUCBChargePenetrationGenerator(Generator):
             )
     
     def exportParameterToStr(self):
+        zs = self._parameters["z"]
         alphas = self._parameters['alpha']
         betas = self._parameters['beta']
         strs = []
         for atype, index in self._with_atom_types.items():
             typestr = f'type="{atype[0]}"'
+            zstr = f'z="{zs[index]:.2f}"'
             alphastr = f'alpha="{float2str(alphas[index])}"'
             betastr = f'beta="{float2str(betas[index])}"'
-            elestr = '\t\t<ChargePenetration {:<10} {:<20} {:<19} />'.format(typestr, alphastr, betastr)
+            elestr = '\t\t<ChargePenetration {:<8} {:<10} {:<20} {:<19} />'.format(zstr, typestr, alphastr, betastr)
             strs.append(elestr)
         
         return '\n'.join(strs)
@@ -957,6 +966,7 @@ class MBUCBChargePenetrationGenerator(Generator):
                 param = self.getParameterWithIdx(paramIdx)
                 term = MBUCBChargePenetration(
                     atom.idx, 
+                    param['z'],
                     param['alpha'], 
                     param['beta'], 
                     paramIdx=paramIdx

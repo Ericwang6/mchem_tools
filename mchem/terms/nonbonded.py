@@ -36,7 +36,7 @@ class Particle:
 class AmoebaVdw147:
     idx: int
     epsilon: float
-    r0: float
+    sigma: float
     parentIdx: int = -1
     reduction: float = 0.0
     paramIdx: int = -1
@@ -96,6 +96,7 @@ class AnisotropicPolarization:
 @dataclass
 class MBUCBChargePenetration:
     idx: int
+    z: float
     alpha: float
     beta: float
     paramIdx: int = -1

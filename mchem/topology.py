@@ -589,3 +589,7 @@ class Topology:
 
     def processDisulfideBond(self):
         raise NotImplementedError()
+    
+    @property
+    def coordinates(self) -> np.ndarray:
+        return np.array([[at.xx, at.xy, at.xz] for at in self.atoms()])

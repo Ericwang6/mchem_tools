@@ -4,7 +4,7 @@ from ..topology import Bond, Atom, Topology, Residue
 
 
 
-def load_pdb(fname: os.PathLike):
+def load_pdb(fname: os.PathLike) -> Topology:
     top = Topology(name=Path(fname).stem)
     residues = []
     with open(fname, 'r') as f:
