@@ -239,7 +239,7 @@ class ForceField:
         for tree in self.trees:
             residues = tree.getroot().find("Residues")
             for res in residues.findall("Residue"):
-                restr = '\t\t<Residue name="{}" />\n{}\n\t\t</Residue>'.format(
+                restr = '\t\t<Residue name="{}">\n{}\n\t\t</Residue>'.format(
                     res.get("name"),
                     '\n'.join(f'\t\t\t{xmlele2str(atomEle)}' for atomEle in res.findall("Atom"))
                 )
