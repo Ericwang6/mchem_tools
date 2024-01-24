@@ -145,7 +145,8 @@ class ForceField:
                 elif child.tag in ["Info", "Residues", "AtomTypes"]:
                     pass
                 else:
-                    raise ValueError(f"{child.tag} is not supported")
+                    pass
+                    # raise ValueError(f"{child.tag} is not supported")
 
     def assignAtomTypes(self, topology: Topology):
         for res in topology.residues:

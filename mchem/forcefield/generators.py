@@ -482,16 +482,39 @@ class AmoebaVdwGenerator(Generator):
     @staticmethod
     def parseElement(element: ET.Element, ff: ForceField):
         generator = ff.addGeneratorWithClass(AmoebaVdwGenerator)
-        generator.setMetadata("type", element.get("type"))
-        generator.setMetadata("radiusrule", element.get("radiusrule"))
-        generator.setMetadata("radiustype", element.get("radiustype"))
-        generator.setMetadata("radiussize", element.get("radiussize"))
-        generator.setMetadata("epsilonrule", element.get('epsilonrule'))
-        generator.setMetadata("vdw-13-scale", str2float(element.get("vdw-13-scale")))
-        generator.setMetadata("vdw-14-scale", str2float(element.get("vdw-14-scale")))
-        generator.setMetadata("vdw-15-scale", str2float(element.get("vdw-15-scale")))
+        generator.setMetadata("type", element.get("type", "BUFFERED-14-7"))
+        generator.setMetadata("radiusrule", element.get("radiusrule", "CUBIC-MEAN"))
+        generator.setMetadata("radiustype", element.get("radiustype", "R-MIN"))
+        generator.setMetadata("radiussize", element.get("radiussize", "DIAMETER"))
+        generator.setMetadata("epsilonrule", element.get('epsilonrule', "HHG"))
+        generator.setMetadata("vdw-13-scale", str2float(element.get("vdw-13-scale", "0.0")))
+        generator.setMetadata("vdw-14-scale", str2float(element.get("vdw-14-scale", "1.0")))
+        generator.setMetadata("vdw-15-scale", str2float(element.get("vdw-15-scale", "1.0")))
         for vdw in element.findall("Vdw"):
             generator.addVdw(vdw)
+    
+    def exportParameterToStr(self):
+        strs = []
+        sigmas = self._parameters['sigma']
+        epsilons = self._parameters['epsilon']
+        reductions = self._parameters['reduction']
+        aclassRecord = {}
+        for atype, index in self._with_atom_types.items():
+            atypeObj = self.ff.atomTypes[atype[0]]
+            aclass = atypeObj.atomClass
+            if aclassRecord.get(aclass, False):
+                continue
+            typestr = f'class="{aclass}"'
+            elestr = '\t\t<Vdw {:<11} {} {} {} />'.format(
+                typestr,
+                f'sigma="{float2str(sigmas[index])}"',
+                f'epsilon="{float2str(epsilons[index])}"',
+                f'reduction="{reductions[index]:.2f}"'
+            )
+            strs.append(elestr)
+            aclassRecord[aclass] = True
+        
+        return '\n'.join(strs)
     
     def addVdw(self, vdwElement: ET.Element):
         paramDict = {
@@ -520,7 +543,7 @@ class AmoebaVdwGenerator(Generator):
 
             if param['reduction'] != 1.00:
                 neis = list(atom.getNeighbors())
-                assert len(neis) == 1
+                assert len(neis) == 1, f"{atom} has more than one neighbors"
                 parentIdx = neis[0].idx
             else:
                 parentIdx = -1

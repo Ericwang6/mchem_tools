@@ -38,7 +38,7 @@ class AmoebaVdw147:
     epsilon: float
     sigma: float
     parentIdx: int = -1
-    reduction: float = 0.0
+    reduction: float = 1.0
     paramIdx: int = -1
 
 
