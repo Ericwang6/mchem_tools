@@ -85,6 +85,7 @@ class System:
             self.addTerm(term, name)
     
     def addMeta(self, key: str, value: Any):
+        key = key.replace("-", "_")
         self._meta[key] = value
 
     def save(self, path: os.PathLike, overwrite: bool = False):
