@@ -111,8 +111,8 @@ class AmoebaAngleGenerator(Generator):
         paramDict = {
             "th0": [
                 str2float(angleElement.get("angle1")),
-                str2float(angleElement.get("angle2", 0.0)),
-                str2float(angleElement.get("angle3", 0.0))
+                str2float(angleElement.get("angle2", angleElement.get("angle1"))),
+                str2float(angleElement.get("angle3", angleElement.get("angle1")))
             ],
             "kth": str2float(angleElement.get("k")),
             "inPlane": str2bool(angleElement.get("inPlane"))
@@ -148,7 +148,7 @@ class AmoebaAngleGenerator(Generator):
                     paramIdx = self.getParameterIdxWithAtomType((atom3.atomType, atom2.atomType, atom1.atomType))
                 
                 if paramIdx is None:
-                    self.raise_exception(f"Bond between {atom1.idx} and {atom2.idx} not matched")
+                    self.raise_exception(f"Angle between {atom1.idx}(type {atom1.atomType}), {atom2.idx}(type {atom2.atomType}) and {atom3.idx}(type {atom3.atomType}) not matched")
                 
                 param = self.getParameterWithIdx(paramIdx)
                 if len(param['th0']) > 1:
@@ -701,12 +701,17 @@ class AmoebaOutOfPlaneBendGenerator(Generator):
                     
                     paramIdxTmp.append(paramIdx)
                     if paramIdx is not None:
+                        # In accordance with OpenMM and MChem backend implementations,
+                        # an out-of-plane angle defined by four atoms (i-j-k-l, where j is the centeral atom) is
+                        # the angle between vector jl and plane ijk
+                        j = trial[1].idx
+                        l = trial[0].idx
+                        i = min(trial[2].idx, trial[3].idx)
+                        k = max(trial[2].idx, trial[3].idx)
                         termsTmp.append(AmoebaOutOfPlaneBend(
-                            trial[order[0]].idx,
-                            trial[order[1]].idx,
-                            trial[order[2]].idx,
-                            trial[order[3]].idx,
-                            self.getParameterWithIdx(paramIdx)['k']
+                            i, j, k, l,
+                            self.getParameterWithIdx(paramIdx)['k'],
+                            paramIdx
                         ))
                 
                 if len(termsTmp) == 3:

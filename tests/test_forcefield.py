@@ -104,12 +104,26 @@ def _test_oop(ommSystem: mm.System, mchemSystem: System):
         if force.getName() == "AmoebaOutOfPlaneBend":
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
-                oopsRef.append(param[0])
+                oopsRef.append(list(param[0]) + list(param[1]))
     
-    oops = [(oop.p0, oop.p1, oop.p2, oop.p3) for oop in mchemSystem.getTermsByName("AmoebaOutOfPlaneBend")]
+    oops = [[oop.p0, oop.p1, oop.p2, oop.p3, oop.fc] for oop in mchemSystem.getTermsByName("AmoebaOutOfPlaneBend")]
     assert len(oops) == len(oopsRef), "Number of OutOfPlaneBend does not match"
+    
+    matches = []
     for oop in oops:
-        assert oop in oopsRef or (oop[0], oop[1], oop[3], oop[2]) in oopsRef, f"OutOfPlaneBend {oop} not in ref"
+        is_match = False
+        for i, oopRef in enumerate(oopsRef):
+            if (oop[0] == oopRef[0] and oop[1] == oopRef[1] and oop[2] == oopRef[2] and oop[3] == oopRef[3] and abs(oop[4] - oopRef[4]) < 1e-5):
+                assert i not in matches, f'Term {oop} matches {oopRef} multiple times'
+                matches.append(i)
+                is_match = True
+                break
+            elif (oop[2] == oopRef[0] and oop[1] == oopRef[1] and oop[0] == oopRef[2] and oop[3] == oopRef[3] and abs(oop[4] - oopRef[4]) < 1e-5):
+                assert i not in matches, f'Term {oop} matches {oopRef} multiple times'
+                matches.append(i)
+                is_match = True
+                break
+        assert is_match, f"Term {oop} matches nothing"
 
 
 def _test_pitor(ommSystem: mm.System, mchemSystem: System):

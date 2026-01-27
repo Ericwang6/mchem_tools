@@ -249,6 +249,6 @@ ELEMENTS = {
     'Og': Og,
 }
 
-for key in ELEMENTS:
-    if len(key) > 1:
-        ELEMENTS[key.upper()] = ELEMENTS[key]
+#for key in ELEMENTS:
+#    if len(key) > 1:
+#        ELEMENTS[key.upper()] = ELEMENTS[key]

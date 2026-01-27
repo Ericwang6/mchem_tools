@@ -91,13 +91,6 @@ class Residue:
         return rep
     
     def matchTemplate(self, template: ResidueTemplate, stdResidueName: bool = True):
-        # match residue name
-        if self.name != template.name:
-            if self.name in template.altNames and stdResidueName:
-                self.setName(template.name)
-            else:
-                return False
-        self.setStdName(template.name)
         
         # match atoms
         if len(self.atoms) != len(template.atoms):
@@ -117,6 +110,11 @@ class Residue:
                         break
                 else:
                     return False
+        
+        #matched
+        if stdResidueName:
+            self.setName(template.name)
+        self.setStdName(template.name)
 
         # match bonds
         for bond in template.bonds:
@@ -516,6 +514,8 @@ class Topology:
     
     @require_editable
     def addBond(self, bond: Bond):
+        # TODO (Eric): Here we need to first check if there has already been a bond
+        # between these two atoms
         bond.atom1.addBond(bond)
         bond.atom2.addBond(bond)
         self._bonds.append(bond)
@@ -556,9 +556,9 @@ class Topology:
                 
     def matchTemplates(self):
         from .template import TEMPLATES
-
         resCYX = []
         for residue in self.residues:
+            # TODO (Eric): Add N/C terminals in the template.xml file
             if residue.name not in TEMPLATES:
                 raise KeyError(f"ResidueTemplate {residue.name} not defined")
             succ = residue.matchTemplate(TEMPLATES[residue.name])

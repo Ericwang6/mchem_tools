@@ -40,7 +40,7 @@ def load_pdb(fname: os.PathLike) -> Topology:
                     atom.setPosition([xx, xy, xz])
                     res.addAtom(atom)
                 prevSig = sig
-    
+    # TODO (Eric): Add processing bonds from CONECT record
     with top.setEditable():
         for res in residues:
             top.addResidue(res)
