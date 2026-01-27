@@ -1,0 +1,1049 @@
+<Residues>
+    <Residue name="NGLY">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA2" />
+        <Atom name="HA3" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA2" order="1" />
+        <Bond from="CA" to="HA3" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NALA">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB1" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB1" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NVAL">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB" />
+        <Atom name="CG1" />
+        <Atom name="HG11" />
+        <Atom name="HG12" />
+        <Atom name="HG13" />
+        <Atom name="CG2" />
+        <Atom name="HG21" />
+        <Atom name="HG22" />
+        <Atom name="HG23" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB" order="1" />
+        <Bond from="CB" to="CG1" order="1" />
+        <Bond from="CB" to="CG2" order="1" />
+        <Bond from="CG1" to="HG11" order="1" />
+        <Bond from="CG1" to="HG12" order="1" />
+        <Bond from="CG1" to="HG13" order="1" />
+        <Bond from="CG2" to="HG21" order="1" />
+        <Bond from="CG2" to="HG22" order="1" />
+        <Bond from="CG2" to="HG23" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NLEU">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG" />
+        <Atom name="CD1" />
+        <Atom name="HD11" />
+        <Atom name="HD12" />
+        <Atom name="HD13" />
+        <Atom name="CD2" />
+        <Atom name="HD21" />
+        <Atom name="HD22" />
+        <Atom name="HD23" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="HG" order="1" />
+        <Bond from="CG" to="CD1" order="1" />
+        <Bond from="CG" to="CD2" order="1" />
+        <Bond from="CD1" to="HD11" order="1" />
+        <Bond from="CD1" to="HD12" order="1" />
+        <Bond from="CD1" to="HD13" order="1" />
+        <Bond from="CD2" to="HD21" order="1" />
+        <Bond from="CD2" to="HD22" order="1" />
+        <Bond from="CD2" to="HD23" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NILE">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB" />
+        <Atom name="CG1" />
+        <Atom name="HG12" />
+        <Atom name="HG13" />
+        <Atom name="CG2" />
+        <Atom name="HG21" />
+        <Atom name="HG22" />
+        <Atom name="HG23" />
+        <Atom name="CD1" />
+        <Atom name="HD11" />
+        <Atom name="HD12" />
+        <Atom name="HD13" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB" order="1" />
+        <Bond from="CB" to="CG1" order="1" />
+        <Bond from="CB" to="CG2" order="1" />
+        <Bond from="CG1" to="HG12" order="1" />
+        <Bond from="CG1" to="HG13" order="1" />
+        <Bond from="CG1" to="CD1" order="1" />
+        <Bond from="CG2" to="HG21" order="1" />
+        <Bond from="CG2" to="HG22" order="1" />
+        <Bond from="CG2" to="HG23" order="1" />
+        <Bond from="CD1" to="HD11" order="1" />
+        <Bond from="CD1" to="HD12" order="1" />
+        <Bond from="CD1" to="HD13" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NMET">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="SD" />
+        <Atom name="CE" />
+        <Atom name="HE1" />
+        <Atom name="HE2" />
+        <Atom name="HE3" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CG" to="SD" order="1" />
+        <Bond from="SD" to="CE" order="1" />
+        <Bond from="CE" to="HE1" order="1" />
+        <Bond from="CE" to="HE2" order="1" />
+        <Bond from="CE" to="HE3" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NPHE">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="CD1" />
+        <Atom name="HD1" />
+        <Atom name="CD2" />
+        <Atom name="HD2" />
+        <Atom name="CE1" />
+        <Atom name="HE1" />
+        <Atom name="CE2" />
+        <Atom name="HE2" />
+        <Atom name="CZ" />
+        <Atom name="HZ" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD1" order="2" />
+        <Bond from="CG" to="CD2" order="1" />
+        <Bond from="CD1" to="HD1" order="1" />
+        <Bond from="CD1" to="CE1" order="1" />
+        <Bond from="CE1" to="HE1" order="1" />
+        <Bond from="CE1" to="CZ" order="2" />
+        <Bond from="CZ" to="HZ" order="1" />
+        <Bond from="CZ" to="CE2" order="1" />
+        <Bond from="CE2" to="HE2" order="1" />
+        <Bond from="CE2" to="CD2" order="2" />
+        <Bond from="CD2" to="HD2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NTYR">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="CD1" />
+        <Atom name="HD1" />
+        <Atom name="CD2" />
+        <Atom name="HD2" />
+        <Atom name="CE1" />
+        <Atom name="HE1" />
+        <Atom name="CE2" />
+        <Atom name="HE2" />
+        <Atom name="CZ" />
+        <Atom name="OH" />
+        <Atom name="HH" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD1" order="2" />
+        <Bond from="CG" to="CD2" order="1" />
+        <Bond from="CD1" to="HD1" order="1" />
+        <Bond from="CD1" to="CE1" order="1" />
+        <Bond from="CE1" to="HE1" order="1" />
+        <Bond from="CE1" to="CZ" order="2" />
+        <Bond from="CZ" to="OH" order="1" />
+        <Bond from="CZ" to="CE2" order="1" />
+        <Bond from="OH" to="HH" order="1" />
+        <Bond from="CE2" to="HE2" order="1" />
+        <Bond from="CE2" to="CD2" order="2" />
+        <Bond from="CD2" to="HD2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NTYD">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="CD1" />
+        <Atom name="HD1" />
+        <Atom name="CD2" />
+        <Atom name="HD2" />
+        <Atom name="CE1" />
+        <Atom name="HE1" />
+        <Atom name="CE2" />
+        <Atom name="HE2" />
+        <Atom name="CZ" />
+        <Atom name="OH" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD1" order="2" />
+        <Bond from="CG" to="CD2" order="1" />
+        <Bond from="CD1" to="HD1" order="1" />
+        <Bond from="CD1" to="CE1" order="1" />
+        <Bond from="CE1" to="HE1" order="1" />
+        <Bond from="CE1" to="CZ" order="2" />
+        <Bond from="CZ" to="OH" order="1" />
+        <Bond from="CZ" to="CE2" order="1" />
+        <Bond from="CE2" to="HE2" order="1" />
+        <Bond from="CE2" to="CD2" order="2" />
+        <Bond from="CD2" to="HD2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NTRP">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="CD1" />
+        <Atom name="HD1" />
+        <Atom name="CD2" />
+        <Atom name="NE1" />
+        <Atom name="HE1" />
+        <Atom name="CE2" />
+        <Atom name="CE3" />
+        <Atom name="HE3" />
+        <Atom name="CZ2" />
+        <Atom name="HZ2" />
+        <Atom name="CZ3" />
+        <Atom name="HZ3" />
+        <Atom name="CH2" />
+        <Atom name="HH2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD1" order="2" />
+        <Bond from="CG" to="CD2" order="1" />
+        <Bond from="CD1" to="HD1" order="1" />
+        <Bond from="CD1" to="NE1" order="1" />
+        <Bond from="NE1" to="HE1" order="1" />
+        <Bond from="NE1" to="CE2" order="1" />
+        <Bond from="CE2" to="CD2" order="2" />
+        <Bond from="CE2" to="CZ2" order="1" />
+        <Bond from="CZ2" to="HZ2" order="1" />
+        <Bond from="CZ2" to="CH2" order="2" />
+        <Bond from="CH2" to="HH2" order="1" />
+        <Bond from="CH2" to="CZ3" order="1" />
+        <Bond from="CZ3" to="HZ3" order="1" />
+        <Bond from="CZ3" to="CE3" order="2" />
+        <Bond from="CE3" to="HE3" order="1" />
+        <Bond from="CE3" to="CD2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NPRO">
+        <Atom name="N" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="HD2" />
+        <Atom name="HD3" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Atom name="H2" altname="H" />
+        <Atom name="H3" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CD" to="HD2" order="1" />
+        <Bond from="CD" to="HD3" order="1" />
+        <Bond from="CD" to="N" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+    </Residue>
+    <Residue name="NSER">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="OG" />
+        <Atom name="HG" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="OG" order="1" />
+        <Bond from="OG" to="HG" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NTHR">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB" />
+        <Atom name="OG1" />
+        <Atom name="HG1" />
+        <Atom name="CG2" />
+        <Atom name="HG21" />
+        <Atom name="HG22" />
+        <Atom name="HG23" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB" order="1" />
+        <Bond from="CB" to="OG1" order="1" />
+        <Bond from="CB" to="CG2" order="1" />
+        <Bond from="OG1" to="HG1" order="1" />
+        <Bond from="CG2" to="HG21" order="1" />
+        <Bond from="CG2" to="HG22" order="1" />
+        <Bond from="CG2" to="HG23" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NASN">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="OD1" />
+        <Atom name="ND2" />
+        <Atom name="HD21" />
+        <Atom name="HD22" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="OD1" order="2" />
+        <Bond from="CG" to="ND2" order="1" />
+        <Bond from="ND2" to="HD21" order="1" />
+        <Bond from="ND2" to="HD22" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NGLN">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="OE1" />
+        <Atom name="NE2" />
+        <Atom name="HE21" />
+        <Atom name="HE22" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CD" to="OE1" order="2" />
+        <Bond from="CD" to="NE2" order="1" />
+        <Bond from="NE2" to="HE21" order="1" />
+        <Bond from="NE2" to="HE22" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NASP">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="OD1" />
+        <Atom name="OD2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="OD1" order="2" />
+        <Bond from="CG" to="OD2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NASH">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="OD1" />
+        <Atom name="OD2" />
+        <Atom name="HD2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="OD1" order="2" />
+        <Bond from="CG" to="OD2" order="1" />
+        <Bond from="OD2" to="HD2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NGLU">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="OE1" />
+        <Atom name="OE2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CD" to="OE1" order="2" />
+        <Bond from="CD" to="OE2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NGLH">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="OE1" />
+        <Atom name="OE2" />
+        <Atom name="HE2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CD" to="OE1" order="2" />
+        <Bond from="CD" to="OE2" order="1" />
+        <Bond from="OE2" to="HE2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NARG">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="HD2" />
+        <Atom name="HD3" />
+        <Atom name="NE" />
+        <Atom name="HE" />
+        <Atom name="CZ" />
+        <Atom name="NH1" />
+        <Atom name="HH11" />
+        <Atom name="HH12" />
+        <Atom name="NH2" />
+        <Atom name="HH21" />
+        <Atom name="HH22" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CD" to="HD2" order="1" />
+        <Bond from="CD" to="HD3" order="1" />
+        <Bond from="CD" to="NE" order="1" />
+        <Bond from="NE" to="HE" order="1" />
+        <Bond from="NE" to="CZ" order="1" />
+        <Bond from="CZ" to="NH1" order="2" />
+        <Bond from="NH1" to="HH11" order="1" />
+        <Bond from="NH1" to="HH12" order="1" />
+        <Bond from="CZ" to="NH2" order="1" />
+        <Bond from="NH2" to="HH21" order="1" />
+        <Bond from="NH2" to="HH22" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NLYS">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="HD2" />
+        <Atom name="HD3" />
+        <Atom name="CE" />
+        <Atom name="HE2" />
+        <Atom name="HE3" />
+        <Atom name="NZ" />
+        <Atom name="HZ1" />
+        <Atom name="HZ2" />
+        <Atom name="HZ3" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CD" to="HD2" order="1" />
+        <Bond from="CD" to="HD3" order="1" />
+        <Bond from="CD" to="CE" order="1" />
+        <Bond from="CE" to="HE2" order="1" />
+        <Bond from="CE" to="HE3" order="1" />
+        <Bond from="CE" to="NZ" order="1" />
+        <Bond from="NZ" to="HZ1" order="1" />
+        <Bond from="NZ" to="HZ2" order="1" />
+        <Bond from="NZ" to="HZ3" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NLYD">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="HG2" />
+        <Atom name="HG3" />
+        <Atom name="CD" />
+        <Atom name="HD2" />
+        <Atom name="HD3" />
+        <Atom name="CE" />
+        <Atom name="HE2" />
+        <Atom name="HE3" />
+        <Atom name="NZ" />
+        <Atom name="HZ1" />
+        <Atom name="HZ2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="HG2" order="1" />
+        <Bond from="CG" to="HG3" order="1" />
+        <Bond from="CG" to="CD" order="1" />
+        <Bond from="CD" to="HD2" order="1" />
+        <Bond from="CD" to="HD3" order="1" />
+        <Bond from="CD" to="CE" order="1" />
+        <Bond from="CE" to="HE2" order="1" />
+        <Bond from="CE" to="HE3" order="1" />
+        <Bond from="CE" to="NZ" order="1" />
+        <Bond from="NZ" to="HZ1" order="1" />
+        <Bond from="NZ" to="HZ2" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NHIP" altname1="NHIS">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="ND1" />
+        <Atom name="HD1" />
+        <Atom name="CD2" />
+        <Atom name="HD2" />
+        <Atom name="CE1" />
+        <Atom name="HE1" />
+        <Atom name="NE2" />
+        <Atom name="HE2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="ND1" order="1" />
+        <Bond from="ND1" to="HD1" order="1" />
+        <Bond from="ND1" to="CE1" order="2" />
+        <Bond from="CE1" to="HE1" order="1" />
+        <Bond from="CE1" to="NE2" order="1" />
+        <Bond from="NE2" to="HE2" order="1" />
+        <Bond from="NE2" to="CD2" order="1" />
+        <Bond from="CD2" to="HD2" order="1" />
+        <Bond from="CD2" to="CG" order="2" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NHID">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="ND1" />
+        <Atom name="HD1" />
+        <Atom name="CD2" />
+        <Atom name="HD2" />
+        <Atom name="CE1" />
+        <Atom name="HE1" />
+        <Atom name="NE2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="ND1" order="1" />
+        <Bond from="ND1" to="HD1" order="1" />
+        <Bond from="ND1" to="CE1" order="2" />
+        <Bond from="CE1" to="HE1" order="1" />
+        <Bond from="CE1" to="NE2" order="1" />
+        <Bond from="NE2" to="CD2" order="1" />
+        <Bond from="CD2" to="HD2" order="1" />
+        <Bond from="CD2" to="CG" order="2" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NHIE">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="CG" />
+        <Atom name="ND1" />
+        <Atom name="CD2" />
+        <Atom name="HD2" />
+        <Atom name="CE1" />
+        <Atom name="HE1" />
+        <Atom name="NE2" />
+        <Atom name="HE2" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="CG" order="1" />
+        <Bond from="CG" to="ND1" order="1" />
+        <Bond from="ND1" to="CE1" order="2" />
+        <Bond from="CE1" to="HE1" order="1" />
+        <Bond from="CE1" to="NE2" order="1" />
+        <Bond from="NE2" to="HE2" order="1" />
+        <Bond from="NE2" to="CD2" order="1" />
+        <Bond from="CD2" to="HD2" order="1" />
+        <Bond from="CD2" to="CG" order="2" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NCYS">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="SG" />
+        <Atom name="HG" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="SG" order="1" />
+        <Bond from="SG" to="HG" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NCYX">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="SG" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="SG" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+    <Residue name="NCYD">
+        <Atom name="N" />
+        <Atom name="H" altname="H1" />
+        <Atom name="H2" />
+        <Atom name="H3" />
+        <Atom name="CA" />
+        <Atom name="HA" />
+        <Atom name="CB" />
+        <Atom name="HB2" />
+        <Atom name="HB3" />
+        <Atom name="SG" />
+        <Atom name="C" />
+        <Atom name="O" />
+        <Bond from="N" to="H" order="1" />
+        <Bond from="N" to="H2" order="1" />
+        <Bond from="N" to="H3" order="1" />
+        <Bond from="N" to="CA" order="1" />
+        <Bond from="CA" to="HA" order="1" />
+        <Bond from="CA" to="CB" order="1" />
+        <Bond from="CB" to="HB2" order="1" />
+        <Bond from="CB" to="HB3" order="1" />
+        <Bond from="CB" to="SG" order="1" />
+        <Bond from="CA" to="C" order="1" />
+        <Bond from="C" to="O" order="2" />
+    </Residue>
+</Residues>
