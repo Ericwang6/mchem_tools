@@ -4,7 +4,7 @@ import re
 import sqlite3
 from typing import Any, Dict, List, Optional
 import os
-from dataclasses import fields, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
 
 from .terms import TermList
 from .terms.bonded import (
@@ -21,6 +21,20 @@ from .terms.nonbonded import (
 )
 
 
+@dataclass
+class Box:
+    """
+    Periodic box dimensions from PDB CRYST1: cell lengths a, b, c (Angstroms)
+    and angles alpha, beta, gamma (degrees).
+    """
+    a: float
+    b: float
+    c: float
+    alpha: float
+    beta: float
+    gamma: float
+
+
 _CLASS_REGISTRY: Dict[str, type] = {cls.__name__: cls for cls in [
     HarmonicBond, AmoebaBond, HarmonicAngle, AmoebaAngle,
     AmoebaAngleInPlane, AmoebaStretchBend, AmoebaUreyBradley,
@@ -30,6 +44,7 @@ _CLASS_REGISTRY: Dict[str, type] = {cls.__name__: cls for cls in [
     Particle, AmoebaVdw147, Multipole,
     IsotropicPolarization, AnisotropicPolarization,
     MBUCBChargePenetration, MBUCBChargeTransfer, PairList,
+    Box,
 ]}
 
 _SQL_TYPE_MAP = {
