@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mchem"
+version = "0.1.0"
+description = "M-Chem front-end: convert PDB to SQLite-DB formatted force-field parameters"
+requires-python = ">=3.9"
+
+dependencies = [
+  "numpy",
+  "scipy",
+  "networkx",
+  "rich-click",
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+
+[project.scripts]
+mchem-tools = "mchem.main:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mchem*"]
