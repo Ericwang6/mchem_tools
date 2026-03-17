@@ -1,0 +1,29 @@
+CRYST1    1.000    1.000    1.000  90.00  90.00  90.00 P 1            
+ATOM      1  CH3 ACE A   1      12.089   9.528  18.145  1.00  0.00           C  
+ATOM      2 HH31 ACE A   1      12.208   8.862  18.990  1.00  0.00           H  
+ATOM      3 HH32 ACE A   1      11.017   9.391  17.757  1.00  0.00           H  
+ATOM      4 HH33 ACE A   1      12.921   9.273  17.379  1.00  0.00           H  
+ATOM      5  C   ACE A   1      12.270  10.972  18.441  1.00  0.00           C  
+ATOM      6  O   ACE A   1      12.475  11.244  19.606  1.00  0.00           O  
+ATOM      7  N   NME A   2      12.175  11.893  17.468  1.00  0.00           N  
+ATOM      8  H   NME A   2      11.910  11.615  16.497  1.00  0.00           H  
+ATOM      9  CH3 NME A   2      12.350  13.301  17.761  1.00  0.00           C  
+ATOM     10 HH31 NME A   2      11.801  13.914  17.047  1.00  0.00           H  
+ATOM     11 HH32 NME A   2      13.417  13.523  17.678  1.00  0.00           H  
+ATOM     12 HH33 NME A   2      12.005  13.548  18.746  1.00  0.00           H  
+ATOM     13  O   HOH B   3      10.998  10.861  21.980  1.00  0.00           O  
+ATOM     14  H1  HOH B   3      11.214   9.931  21.918  1.00  0.00           H  
+ATOM     15  H2  HOH B   3      11.647  11.296  21.427  1.00  0.00           H  
+CONECT    1    2    3    4    5
+CONECT    2    1
+CONECT    3    1
+CONECT    4    1
+CONECT    5    1    6    7
+CONECT    6    5
+CONECT    7    5    8    9
+CONECT    8    7
+CONECT    9    7   10   11   12
+CONECT   10    9
+CONECT   11    9
+CONECT   12    9
+END                                                                             
