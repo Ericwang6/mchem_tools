@@ -1,0 +1,33 @@
+{
+  "pdb_file": "/Users/ericwang/Documents/Berkeley/mchem_front_end_develop/tests/data/DHFR.pdb",
+  "num_atoms": 23558,
+  "settings": {
+    "vdw_cutoff_nm": 0.9,
+    "vdw_potential_function": "Buffered-14-7",
+    "vdw_sigma_combining_rule": "CUBIC-MEAN",
+    "vdw_epsilon_combining_rule": "HHG",
+    "vdw_dispersion_correction": true,
+    "multipole_cutoff_nm": 0.7000000000000001,
+    "multipole_PME_alpha_per_nm": 4.699061626778891,
+    "multipole_PME_nx": 194,
+    "multipole_PME_ny": 194,
+    "multipole_PME_nz": 194,
+    "ewald_error_tolerance": 1e-05,
+    "polarization_type": "Mutual"
+  },
+  "energies_kJ_per_mol": {
+    "AmoebaBond": 3252.5526332282143,
+    "AmoebaOutOfPlaneBend": 510.58175619771345,
+    "AmoebaAngle": 11084.087003703282,
+    "AmoebaInPlaneAngle": 2756.4480433061212,
+    "AmoebaStretchBend": 63.160605689136396,
+    "PeriodicTorsionForce": 1532.4984451807654,
+    "AmoebaPiTorsion": 212.6807684425063,
+    "AmoebaTorsionTorsionForce": -135.0050456664161,
+    "AmoebaVdwForce": 136795.07240261545,
+    "AmoebaMultipoleForce": -426969.1369793513,
+    "HarmonicBondForce": -358.9122032249647,
+    "CMMotionRemover": 0.0
+  },
+  "total_energy_kJ_per_mol": -271255.9725698795
+}
