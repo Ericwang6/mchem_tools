@@ -1,18 +1,76 @@
+import re
 import sqlite3
-from typing import List, Any, Dict, Tuple, Union, Optional
+from typing import Any, Dict, List, Optional
 import os
 from dataclasses import fields, is_dataclass
 
 from .terms import TermList
+from .terms.bonded import (
+    HarmonicBond, AmoebaBond, HarmonicAngle, AmoebaAngle,
+    AmoebaAngleInPlane, AmoebaStretchBend, AmoebaUreyBradley,
+    AmoebaOutOfPlaneBend, PeriodicTorsion, AmoebaStretchTorsion,
+    AmoebaAngleTorsion, AmoebaPiTorsion, CMAPTable, CMAP,
+    AmoebaTorsionTorsion, AmoebaTorsionTorsionGrid,
+)
+from .terms.nonbonded import (
+    Particle, AmoebaVdw147, Multipole,
+    IsotropicPolarization, AnisotropicPolarization,
+    MBUCBChargePenetration, MBUCBChargeTransfer, PairList,
+)
 
 
-def tuple2str(tup):
-    if len(tup) >= 2:
-        return str(tup)
-    else:
-        strtup = str(tup)
-        strtup = strtup[:-2] + ")"
-        return strtup
+_CLASS_REGISTRY: Dict[str, type] = {cls.__name__: cls for cls in [
+    HarmonicBond, AmoebaBond, HarmonicAngle, AmoebaAngle,
+    AmoebaAngleInPlane, AmoebaStretchBend, AmoebaUreyBradley,
+    AmoebaOutOfPlaneBend, PeriodicTorsion, AmoebaStretchTorsion,
+    AmoebaAngleTorsion, AmoebaPiTorsion, CMAPTable, CMAP,
+    AmoebaTorsionTorsion, AmoebaTorsionTorsionGrid,
+    Particle, AmoebaVdw147, Multipole,
+    IsotropicPolarization, AnisotropicPolarization,
+    MBUCBChargePenetration, MBUCBChargeTransfer, PairList,
+]}
+
+_SQL_TYPE_MAP = {
+    int: "INTEGER", str: "TEXT", float: "FLOAT",
+    bool: "INTEGER", list: "TEXT",
+}
+
+
+def register_term_class(cls):
+    """Register a custom term dataclass so it can be deserialized from a
+    database file.  Call this before loading a ``.db`` that contains the
+    class.
+    """
+    _CLASS_REGISTRY[cls.__name__] = cls
+
+
+def _term_to_row(term) -> tuple:
+    row = []
+    for f in fields(term):
+        val = getattr(term, f.name)
+        if isinstance(val, list):
+            val = " ".join(str(x) for x in val)
+        row.append(val)
+    return tuple(row)
+
+
+def _sort_key_fields(datacls) -> List[str]:
+    """Return the field names to sort a term table by.
+
+    Prefers particle-index columns (p0, p1, p2, ...) in numeric order,
+    falls back to ``idx`` if present, otherwise returns an empty list
+    (no sorting).
+    """
+    names = [f.name for f in fields(datacls)]
+    p_cols = sorted(
+        [n for n in names if re.fullmatch(r"p\d+", n)],
+        key=lambda n: int(n[1:]),
+    )
+    if p_cols:
+        return p_cols
+    if "idx" in names:
+        return ["idx"]
+    return []
 
 
 class System:
@@ -24,69 +82,79 @@ class System:
             self.fromDatabase()
         else:
             self.conn = None
-    
+
     def __getitem__(self, key: str):
         return self.data[key]
-    
+
     @property
     def data(self):
         return self._data
-    
+
     @property
     def meta(self):
         return self._meta
-    
+
+    # ---- read from database ------------------------------------------------
+
     def fromDatabase(self):
         names = self.getTableNames()
         assert "meta" in names, "Metadata missing"
-        
-        prevRowFactory = self.conn.row_factory
-        self.conn.row_factory = sqlite3.Row
 
+        prev_row_factory = self.conn.row_factory
+        self.conn.row_factory = sqlite3.Row
         cur = self.conn.cursor()
 
-        # retrieve metadata
         cur.execute("SELECT * FROM meta")
         self._meta = dict(cur.fetchone())
-        names.remove('meta')
+        names.remove("meta")
 
-        # retrive class names
         cur.execute("SELECT * FROM class")
         clsmap = {}
         for row in cur.fetchall():
             d = dict(row)
-            clsmap[d['tablename']] = d['clsname']
+            clsmap[d["tablename"]] = d["clsname"]
         names.remove("class")
-        
+
         for name in names:
             cur.execute(f"SELECT * FROM {name}")
-            cls = eval(clsmap[name])
+            clsname = clsmap[name]
+            if clsname not in _CLASS_REGISTRY:
+                raise ValueError(
+                    f"Unknown term class '{clsname}'. "
+                    "Register it via register_term_class() before loading."
+                )
+            cls = _CLASS_REGISTRY[clsname]
             terms = TermList(cls)
             for row in cur.fetchall():
-                term = cls(**dict(row))
-                terms.append(term)
+                terms.append(cls(**dict(row)))
             self._data[name] = terms
-        
-        self.conn.row_factory = prevRowFactory
-    
+
+        self.conn.row_factory = prev_row_factory
+
+    def getTableNames(self):
+        cur = self.conn.execute("SELECT name FROM sqlite_master")
+        return [res[0] for res in cur.fetchall()]
+
+    # ---- in-memory mutation -------------------------------------------------
+
     def getTermsByName(self, name: str) -> TermList:
         return self.data[name]
-    
+
     def addTerm(self, term, name: Optional[str] = None):
         name = term.__class__.__name__ if name is None else name
         if name not in self.data:
             self._data[name] = TermList(term.__class__)
-            self._data[name].append(term)
-        else:
-            self._data[name].append(term)
-    
+        self._data[name].append(term)
+
     def addTerms(self, terms: TermList, name: Optional[str] = None):
         for term in terms:
             self.addTerm(term, name)
-    
+
     def addMeta(self, key: str, value: Any):
         key = key.replace("-", "_")
         self._meta[key] = value
+
+    # ---- write to database --------------------------------------------------
 
     def save(self, path: os.PathLike, overwrite: bool = False):
         if (not overwrite) and os.path.isfile(path):
@@ -94,93 +162,76 @@ class System:
         elif overwrite and os.path.isfile(path):
             os.remove(path)
 
-        self.conn = sqlite3.connect(str(path))
-        
-        # save meta data
-        cols = {}
-        for key, value in self.meta.items():
-            cols[key] = type(value)
-        
-        self.createTable("meta", cols)
-        self.addTermToDatabase(self.meta, "meta")
-        
+        self.conn = sqlite3.connect(str(path), isolation_level=None)
+        self.conn.execute("PRAGMA journal_mode=WAL")
+        self.conn.execute("PRAGMA synchronous=OFF")
+
+        try:
+            self.conn.execute("BEGIN")
+            self._write_meta()
+            clsmap = self._write_terms()
+            self._write_class_map(clsmap)
+            self.conn.execute("COMMIT")
+        except Exception:
+            self.conn.execute("ROLLBACK")
+            raise
+        finally:
+            self.close()
+
+    def _write_meta(self):
+        cols = {key: type(value) for key, value in self.meta.items()}
+        self._create_table("meta", cols)
+
+        keys = list(self.meta.keys())
+        placeholders = ", ".join("?" for _ in keys)
+        self.conn.execute(
+            f"INSERT INTO meta({', '.join(keys)}) VALUES ({placeholders})",
+            tuple(self.meta.values()),
+        )
+
+    def _write_terms(self) -> Dict[str, str]:
         clsmap = {}
-
-        # save data
         for name, terms in self.data.items():
-            self.createTableFromClass(terms.cls, name)
-            self.addTermsToDatabase(terms, name)
+            self._create_table_from_class(terms.cls, name)
+            self._insert_terms(terms, name)
             clsmap[name] = terms.cls.__name__
-        
-        # save class name
-        self.createTable("class", {"tablename": str, "clsname": str})
-        with self.conn:
-            cur = self.conn.cursor()
-            cur.execute("INSERT INTO class(tablename, clsname) VALUES " + ', '.join(str(item) for item in clsmap.items()))
+        return clsmap
 
-        self.close()
+    def _write_class_map(self, clsmap: Dict[str, str]):
+        self._create_table("class", {"tablename": str, "clsname": str})
+        self.conn.executemany(
+            "INSERT INTO class(tablename, clsname) VALUES (?, ?)",
+            list(clsmap.items()),
+        )
 
-    def createTable(self, name: str, columns: Dict[str, Any]):
-        typeMap = {int: "INTEGER", str: "TEXT", float: "FLOAT", bool: "INTEGER", list: "TEXT"}
-        tmp = ", ".join(f"{col} {typeMap[typ]}" for col, typ in columns.items())
-        with self.conn:
-            cur = self.conn.cursor()
-            query = f"CREATE TABLE {name} ({tmp})"
-            cur.execute(query)
-    
-    def createTableFromClass(self, datacls, tableName: Optional[str] = None):
-        tableName = datacls.__name__ if tableName is None else tableName
+    def _create_table(self, name: str, columns: Dict[str, Any]):
+        col_defs = ", ".join(
+            f"{col} {_SQL_TYPE_MAP[typ]}" for col, typ in columns.items()
+        )
+        self.conn.execute(f"CREATE TABLE {name} ({col_defs})")
+
+    def _create_table_from_class(self, datacls, table_name: Optional[str] = None):
+        table_name = datacls.__name__ if table_name is None else table_name
         columns = {attr.name: attr.type for attr in fields(datacls)}
-        self.createTable(tableName, columns)
-    
-    def getTableNames(self):
-        with self.conn:
-            cur = self.conn.cursor()
-            cur.execute("SELECT name FROM sqlite_master")
-        names = [res[0] for res in cur.fetchall()]
-        return names
-    
-    def addTermsToDatabase(self, terms: TermList, tableName: Optional[str] = None):
-        if tableName is None:
-            tableName = terms.cls.__name__
-        assert tableName in self.getTableNames(), f"{tableName} class not registered. Run System.createTableFromClass() first."
+        self._create_table(table_name, columns)
 
-        attrnames = []
-        for attr in fields(terms.cls):
-            attrnames.append(attr.name)
-        
-        data = []
-        for term in terms:
-            tmp = []
-            for name in attrnames:
-                attr = getattr(term, name)
-                if isinstance(attr, list):
-                    attr = " ".join(str(x) for x in attr)
-                tmp.append(attr)
-            data.append(tuple(tmp))
+    def _insert_terms(self, terms: TermList, table_name: Optional[str] = None):
+        if not terms:
+            return
+        table_name = table_name or terms.cls.__name__
+        attrnames = [attr.name for attr in fields(terms.cls)]
+        placeholders = ", ".join("?" for _ in attrnames)
+        query = f"INSERT INTO {table_name}({', '.join(attrnames)}) VALUES ({placeholders})"
 
-        query = f"INSERT INTO {tableName}(" + ', '.join(attrnames) + ') VALUES ' + ', '.join(tuple2str(d) for d in data)
-        with self.conn:
-            cur = self.conn.cursor()
-            cur.execute(query)
-    
-    def addTermToDatabase(self, term, tableName: Optional[str] = None):
-        if is_dataclass(term):
-            terms = TermList(term.__class__)
-            terms.append(term)
-            self.addTermsToDatabase(terms, tableName)
-        elif isinstance(term, dict):
-            assert tableName is not None, 'tableName is None'
-            keys, values = [], []
-            for k, v in term.items():
-                keys.append(k)
-                values.append(v)
-            query = f"INSERT INTO {tableName}(" + ', '.join(keys) + ') VALUES ' + tuple2str(tuple(values))
+        sort_keys = _sort_key_fields(terms.cls)
+        if sort_keys:
+            sorted_terms = sorted(
+                terms, key=lambda t: tuple(getattr(t, k) for k in sort_keys)
+            )
+        else:
+            sorted_terms = terms
 
-            with self.conn:
-                cur = self.conn.cursor()
-                cur.execute(query)
+        self.conn.executemany(query, [_term_to_row(t) for t in sorted_terms])
 
     def close(self):
         self.conn.close()
-
