@@ -16,6 +16,8 @@ from ..terms import (
     AmoebaOutOfPlaneBend,
     AmoebaUreyBradley,
     AmoebaPiTorsion,
+    AmoebaTorsionTorsion,
+    AmoebaTorsionTorsionGrid,
     HarmonicAngle,
     HarmonicBond,
     PeriodicTorsion,
@@ -841,6 +843,80 @@ class PeriodicTorsionGenerator(Generator):
         return torsionTerms
     
 Parsers['PeriodicTorsionForce'] = PeriodicTorsionGenerator
+
+
+class AmoebaTorsionTorsionGenerator(Generator):
+    def __init__(self, ff):
+        super().__init__(ff, [], False)
+        self._patterns = []
+        self._grids = {}
+
+    @staticmethod
+    def parseElement(element: ET.Element, ff: ForceField):
+        generator = ff.addGeneratorWithClass(AmoebaTorsionTorsionGenerator)
+        for tt in element.findall("TorsionTorsion"):
+            classes = tuple(tt.get(f"class{i}") for i in range(1, 6))
+            gridIdx = str2int(tt.get("grid"))
+            nx = str2int(tt.get("nx"))
+            ny = str2int(tt.get("ny"))
+            generator._patterns.append((classes, gridIdx, nx, ny))
+
+        for ttg in element.findall("TorsionTorsionGrid"):
+            gridIdx = str2int(ttg.get("grid"))
+            nx = str2int(ttg.get("nx"))
+            ny = str2int(ttg.get("ny"))
+            points = []
+            for gp in ttg.findall("Grid"):
+                angle1 = str2float(gp.get("angle1"))
+                angle2 = str2float(gp.get("angle2"))
+                f = str2float(gp.get("f"))
+                points.append((angle1, angle2, f))
+            generator._grids[gridIdx] = {"nx": nx, "ny": ny, "points": points}
+
+    def _match_pattern(self, atom_classes):
+        for classes, gridIdx, nx, ny in self._patterns:
+            types_fwd = []
+            for cls in classes:
+                types_fwd.append(
+                    set(at.name for at in self.ff.atomClasses.get(cls, []))
+                )
+            types_rev = list(reversed(types_fwd))
+
+            if all(ac in ts for ac, ts in zip(atom_classes, types_fwd)):
+                return gridIdx, nx, ny
+            if all(ac in ts for ac, ts in zip(atom_classes, types_rev)):
+                return gridIdx, nx, ny
+        return None
+
+    def createTerms(self, topology: Topology, **kwargs):
+        ttTerms = TermList(AmoebaTorsionTorsion)
+        usedGrids = set()
+
+        for chain in topology.bondedAtoms[4]:
+            atoms = chain.atoms
+            atom_classes = tuple(a.atomType for a in atoms)
+            match = self._match_pattern(atom_classes)
+            if match is None:
+                continue
+            gridIdx, nx, ny = match
+            ttTerms.append(AmoebaTorsionTorsion(
+                atoms[0].idx, atoms[1].idx, atoms[2].idx,
+                atoms[3].idx, atoms[4].idx,
+                gridIdx, nx, ny
+            ))
+            usedGrids.add(gridIdx)
+
+        gridTerms = TermList(AmoebaTorsionTorsionGrid)
+        for gridIdx in sorted(usedGrids):
+            grid = self._grids[gridIdx]
+            for angle1, angle2, f in grid["points"]:
+                gridTerms.append(AmoebaTorsionTorsionGrid(
+                    angle1, angle2, f, gridIdx
+                ))
+
+        return ttTerms, gridTerms
+
+Parsers['AmoebaTorsionTorsionForce'] = AmoebaTorsionTorsionGenerator
 
 
 class AnisotropicPolarizationGenerator(Generator):

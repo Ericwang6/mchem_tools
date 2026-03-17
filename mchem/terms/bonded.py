@@ -204,3 +204,25 @@ class CMAP:
     p5: int
     p6: int
     p7: int
+
+
+@dataclass
+class AmoebaTorsionTorsionGrid:
+    """Class for an AMOEBA torsion-torsion 2D energy grid point"""
+    angle1: float
+    angle2: float
+    f: float
+    gridIdx: int
+
+
+@dataclass
+class AmoebaTorsionTorsion:
+    """Class for an AMOEBA torsion-torsion coupling term (5-atom chain)"""
+    p0: int
+    p1: int
+    p2: int
+    p3: int
+    p4: int
+    gridIdx: int
+    nx: int
+    ny: int
