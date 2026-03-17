@@ -1,3 +1,5 @@
+"""System of force terms and particles; load/save from SQLite DB."""
+
 import re
 import sqlite3
 from typing import Any, Dict, List, Optional
@@ -74,7 +76,23 @@ def _sort_key_fields(datacls) -> List[str]:
 
 
 class System:
+    """
+    Container for force-field terms and metadata, backed by SQLite.
+
+    Terms are stored by table name (e.g. ``Particle``, ``AmoebaBond``).
+    Metadata is stored in a separate ``meta`` table. Use :func:`register_term_class`
+    to register custom term dataclasses before loading a DB that contains them.
+    """
+
     def __init__(self, path: Optional[os.PathLike] = None):
+        """
+        Create an empty system or load from an existing SQLite DB.
+
+        Parameters
+        ----------
+        path : os.PathLike, optional
+            If given, path to SQLite file to load; otherwise an empty system.
+        """
         self._data = {}
         self._meta = {}
         if path:
@@ -84,19 +102,23 @@ class System:
             self.conn = None
 
     def __getitem__(self, key: str):
+        """Return the term list for the given table name."""
         return self.data[key]
 
     @property
     def data(self):
+        """Mapping of table name to :class:`TermList` of terms."""
         return self._data
 
     @property
     def meta(self):
+        """Mapping of metadata keys to values (e.g. name, units)."""
         return self._meta
 
     # ---- read from database ------------------------------------------------
 
     def fromDatabase(self):
+        """Load all tables from the connected SQLite database into :attr:`data` and :attr:`meta`."""
         names = self.getTableNames()
         assert "meta" in names, "Metadata missing"
 
@@ -132,31 +154,46 @@ class System:
         self.conn.row_factory = prev_row_factory
 
     def getTableNames(self):
+        """Return list of table names in the connected database."""
         cur = self.conn.execute("SELECT name FROM sqlite_master")
         return [res[0] for res in cur.fetchall()]
 
     # ---- in-memory mutation -------------------------------------------------
 
     def getTermsByName(self, name: str) -> TermList:
+        """Return the :class:`TermList` for the given term table name."""
         return self.data[name]
 
     def addTerm(self, term, name: Optional[str] = None):
+        """Append a single term; use its class name as table name if `name` is not given."""
         name = term.__class__.__name__ if name is None else name
         if name not in self.data:
             self._data[name] = TermList(term.__class__)
         self._data[name].append(term)
 
     def addTerms(self, terms: TermList, name: Optional[str] = None):
+        """Append all terms from a :class:`TermList`."""
         for term in terms:
             self.addTerm(term, name)
 
     def addMeta(self, key: str, value: Any):
+        """Set a metadata key (hyphens in `key` are replaced with underscores)."""
         key = key.replace("-", "_")
         self._meta[key] = value
 
     # ---- write to database --------------------------------------------------
 
     def save(self, path: os.PathLike, overwrite: bool = False):
+        """
+        Write :attr:`meta` and all term tables to a new SQLite file.
+
+        Parameters
+        ----------
+        path : os.PathLike
+            Output DB path.
+        overwrite : bool, optional
+            If True, replace existing file; otherwise raise if file exists.
+        """
         if (not overwrite) and os.path.isfile(path):
             raise FileExistsError(f"{path} already exists")
         elif overwrite and os.path.isfile(path):
@@ -177,6 +214,10 @@ class System:
             raise
         finally:
             self.close()
+
+    def close(self):
+        """Close the database connection."""
+        self.conn.close()
 
     def _write_meta(self):
         cols = {key: type(value) for key, value in self.meta.items()}
@@ -232,6 +273,3 @@ class System:
             sorted_terms = terms
 
         self.conn.executemany(query, [_term_to_row(t) for t in sorted_terms])
-
-    def close(self):
-        self.conn.close()

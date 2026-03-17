@@ -1,3 +1,5 @@
+"""Force generators: create bonded/nonbonded terms from XML and topology."""
+
 import itertools
 import xml.etree.ElementTree as ET
 
@@ -33,6 +35,7 @@ from ..terms import (
 
 
 class AmoebaBondGenerator(Generator):
+    """Generator for AMOEBA bond terms (quartic) from AmoebaBondForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ["b0", "kb"], False)
 
@@ -96,6 +99,7 @@ Parsers["AmoebaBondForce"] = AmoebaBondGenerator
 
 
 class AmoebaAngleGenerator(Generator):
+    """Generator for AMOEBA angle and in-plane angle terms from AmoebaAngleForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ['th0', 'inPlane', 'kth'], False)
     
@@ -190,6 +194,7 @@ Parsers["AmoebaAngleForce"] = AmoebaAngleGenerator
 
 
 class AmoebaUreyBradleyGenerator(Generator):
+    """Generator for AMOEBA Urey-Bradley terms from AmoebaUreyBradleyForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ["fc", "r0"], False)
     
@@ -248,6 +253,7 @@ Parsers["AmoebaUreyBradleyForce"] = AmoebaUreyBradleyGenerator
 
 
 class MultipoleGenerator(Generator):
+    """Generator for atomic multipoles from AmoebaMultipoleForce / MBUCBMultipoleForce XML."""
     def __init__(self, ff):
         super().__init__(ff, [
             'kz', 'kx', 'ky', 'axisType', 'multipoles'
@@ -402,6 +408,7 @@ class MultipoleGenerator(Generator):
 
 
 class IsotropicPolarizationGenerator(Generator):
+    """Generator for isotropic polarizability terms from Polarize elements."""
     def __init__(self, ff):
         super().__init__(ff, ["thole", "alpha", "grp"], True)
     
@@ -478,6 +485,7 @@ Parsers['AmoebaMultipoleForce'] = [
 
 
 class AmoebaVdwGenerator(Generator):
+    """Generator for AMOEBA buffered 14-7 VdW terms from AmoebaVdwForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ['sigma', 'epsilon', 'reduction'], True)
     
@@ -559,6 +567,7 @@ Parsers['AmoebaVdwForce'] = AmoebaVdwGenerator
 
 
 class AmoebaStretchBendGenerator(Generator):
+    """Generator for AMOEBA stretch-bend coupling from AmoebaStretchBendForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ['th0', 'b01', 'b02', 'kb1', 'kb2'], False)
     
@@ -647,6 +656,7 @@ Parsers['AmoebaStretchBendForce'] = AmoebaStretchBendGenerator
 
 
 class AmoebaOutOfPlaneBendGenerator(Generator):
+    """Generator for AMOEBA out-of-plane bend terms from AmoebaOutOfPlaneBendForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ['k'], False)
     
@@ -727,6 +737,7 @@ Parsers['AmoebaOutOfPlaneBendForce'] = AmoebaOutOfPlaneBendGenerator
 
 
 class AmoebaPiTorsionGenerator(Generator):
+    """Generator for AMOEBA pi-torsion terms from AmoebaPiTorsionForce XML."""
     def __init__(self, ff):
         super().__init__(ff, ['k'], False)
     
@@ -787,6 +798,7 @@ Parsers['AmoebaPiTorsionForce'] = AmoebaPiTorsionGenerator
 
 
 class PeriodicTorsionGenerator(Generator):
+    """Generator for periodic proper torsions from PeriodicTorsionForce XML."""
     def __init__(self, ff):
         super().__init__(
             ff, 
@@ -846,6 +858,7 @@ Parsers['PeriodicTorsionForce'] = PeriodicTorsionGenerator
 
 
 class AmoebaTorsionTorsionGenerator(Generator):
+    """Generator for AMOEBA torsion-torsion (5-atom) terms and grids from AmoebaTorsionTorsionForce XML."""
     def __init__(self, ff):
         super().__init__(ff, [], False)
         self._patterns = []
@@ -920,6 +933,7 @@ Parsers['AmoebaTorsionTorsionForce'] = AmoebaTorsionTorsionGenerator
 
 
 class AnisotropicPolarizationGenerator(Generator):
+    """Generator for anisotropic polarizability from Polarize elements (MBUCB)."""
     def __init__(self, ff):
         super().__init__(ff, ["thole", "alpha", "grp"], True)
     
@@ -1019,6 +1033,7 @@ class AnisotropicPolarizationGenerator(Generator):
     
     
 class MBUCBChargePenetrationGenerator(Generator):
+    """Generator for MBUCB charge-penetration terms from ChargePenetration elements."""
     def __init__(self, ff):
         super().__init__(ff, ['z', 'alpha', 'beta'], False)
     
@@ -1088,6 +1103,7 @@ Parsers['MBUCBMultipoleForce'] = [
 
 
 class MBUCBChargeTransferGenerator(Generator):
+    """Generator for MBUCB charge-transfer terms from ChargeTransfer elements."""
     def __init__(self, ff):
         super().__init__(ff, ['b', 'd', 'alpha'], False)
     

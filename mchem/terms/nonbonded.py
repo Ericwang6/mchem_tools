@@ -1,8 +1,11 @@
+"""Non-bonded terms: particles, VdW, multipoles, polarization, MBUCB."""
+
 from dataclasses import dataclass, field
 from enum import Enum
 
 
 class MultipoleAxisType(Enum):
+    """Axis convention for multipole frame (ZThenX, Bisector, ZOnly, etc.)."""
     ZThenX            = 0
     Bisector          = 1
     ZBisect           = 2
@@ -18,6 +21,7 @@ MultipoleAxisTypeInt2Str = {
 
 @dataclass
 class Particle:
+    """Single particle: index, name, element, mass, residue info, position, optional velocity."""
     idx: int
     name: str
     element: str
@@ -34,6 +38,7 @@ class Particle:
 
 @dataclass
 class AmoebaVdw147:
+    """AMOEBA buffered 14-7 VdW parameters (epsilon, sigma, reduction, optional parent)."""
     idx: int
     epsilon: float
     sigma: float
@@ -44,6 +49,7 @@ class AmoebaVdw147:
 
 @dataclass
 class Multipole:
+    """Atomic multipole (charge, dipole, quadrupole) and axis type / frame indices."""
     idx: int
     c0: float
     dx: float
@@ -64,6 +70,7 @@ class Multipole:
 
 @dataclass
 class IsotropicPolarization:
+    """Isotropic polarizability (alpha, thole) and polarization group indices."""
     idx: int
     alpha: float
     thole: float
@@ -77,6 +84,7 @@ class IsotropicPolarization:
 
 @dataclass
 class AnisotropicPolarization:
+    """Anisotropic polarizability tensor (alpha_xx, alpha_xy, ...) and thole/group."""
     idx: int
     alphaxx: float
     alphaxy: float
@@ -95,6 +103,7 @@ class AnisotropicPolarization:
 
 @dataclass
 class MBUCBChargePenetration:
+    """MBUCB charge-penetration correction parameters (z, alpha, beta)."""
     idx: int
     z: float
     alpha: float
@@ -104,6 +113,7 @@ class MBUCBChargePenetration:
 
 @dataclass
 class MBUCBChargeTransfer:
+    """MBUCB charge-transfer parameters (d, b, alpha)."""
     idx: int
     d: float
     b: float

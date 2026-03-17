@@ -1,3 +1,5 @@
+"""Bonded force terms: bonds, angles, Urey-Bradley, torsions, CMAP, AMOEBA-specific."""
+
 import numpy as np
 from dataclasses import dataclass
 
@@ -104,6 +106,7 @@ class AmoebaOutOfPlaneBend:
 
 @dataclass
 class PeriodicTorsion:
+    """Periodic torsion (dihedral) term with up to six Fourier components."""
     p0: int
     p1: int
     p2: int

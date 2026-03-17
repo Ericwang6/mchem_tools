@@ -1,3 +1,5 @@
+"""Force field definition from XML: atom types, residues, and force generators."""
+
 from typing import List, Dict, Any
 from dataclasses import dataclass
 from itertools import product, combinations
@@ -13,14 +15,17 @@ from ..terms import TermList, Particle
 
 
 def str2float(string):
+    """Convert string to float."""
     return float(string)
 
 
 def str2int(string):
+    """Convert string to int."""
     return int(string)
 
 
 def float2str(number):
+    """Format number for XML (float or scientific)."""
     if number == 0.0 or abs(number) > 1e-5:
         return f"{number:.10f}"
     else:
@@ -28,6 +33,7 @@ def float2str(number):
 
 
 def str2bool(string):
+    """Convert string to bool (True/False, case-insensitive)."""
     if string == "True" or string == "true":
         return True
     elif string == "False" or string == 'false':
@@ -37,12 +43,14 @@ def str2bool(string):
 
 
 def xmlele2str(xmlele: ET.Element):
+    """Serialize XML element to string (unicode, stripped)."""
     uglystr = ET.tostring(xmlele, "unicode")
     return uglystr.strip()
 
 
 @dataclass
 class AtomType:
+    """Force-field atom type with name and class."""
     name: str
     atomClass: str
 
@@ -52,7 +60,22 @@ Parsers = {}
 
 
 class ForceField:
+    """
+    Load and apply a force field from one or more XML files.
+
+    Parses AtomTypes, Residues, and force elements (e.g. AmoebaBondForce);
+    uses :data:`Parsers` to create generators that produce terms for a :class:`Topology`.
+    """
+
     def __init__(self, *files):
+        """
+        Load force field from one or more XML files.
+
+        Parameters
+        ----------
+        *files : str or os.PathLike
+            XML paths; resolved via :meth:`processFileNames` if not found.
+        """
         self.files = self.processFileNames(files)
         self.trees = [ET.parse(f) for f in self.files]
 
@@ -64,8 +87,9 @@ class ForceField:
         self.loadAtomTypes()
         self.loadAtomTypeDefs()
         self.loadForces()
-    
+
     def processFileNames(self, files):
+        """Resolve file paths; search next to this module if not found. Returns list of paths."""
         dirname = os.path.dirname(__file__)
         files = list(files) if isinstance(files, tuple) else [files]
         for i in range(len(files)):
@@ -79,12 +103,15 @@ class ForceField:
 
     @property
     def generators(self):
+        """List of force generators (one per force type from XML)."""
         return self._generators
-    
+
     def addGenerator(self, generator):
+        """Append a force generator."""
         self._generators.append(generator)
-    
+
     def getGeneratorWithClass(self, generatorClass):
+        """Return the first generator that is an instance of `generatorClass`, or None."""
         idx = None
         for i in range(len(self.generators)):
             if isinstance(self.generators[i], generatorClass):
@@ -94,15 +121,17 @@ class ForceField:
             return None
         else:
             return self.generators[i]
-    
+
     def addGeneratorWithClass(self, generatorClass):
+        """Get or create a generator of the given class and return it."""
         generator = self.getGeneratorWithClass(generatorClass)
         if generator is None:
             generator = generatorClass(self)
             self.addGenerator(generator)
         return generator
-           
+
     def addAtomType(self, atomTypeElement: ET.Element):
+        """Register an atom type from an XML ``Type`` element (name, class)."""
         name = atomTypeElement.get("name")
         aclass = atomTypeElement.get("class", "")
         atype = AtomType(name, aclass)
@@ -112,14 +141,16 @@ class ForceField:
         cls2type = self.atomClasses.get(aclass, [])
         cls2type.append(atype)
         self.atomClasses[aclass] = cls2type
-    
+
     def loadAtomTypes(self):
+        """Load all AtomTypes from parsed XML trees."""
         for tree in self.trees:
             atomTypes = tree.getroot().find("AtomTypes")
             for atomTypeElement in atomTypes.findall("Type"):
                 self.addAtomType(atomTypeElement)
-    
+
     def loadAtomTypeDefs(self):
+        """Map residue atom names to atom types from Residues section (templates must exist)."""
         for tree in self.trees:
             residues = tree.getroot().find("Residues")
             for res in residues.findall("Residue"):
@@ -131,8 +162,9 @@ class ForceField:
                     name = atom.get("name")
                     atype = atom.get('type')
                     template.setAtomType(name, atype)
-    
+
     def loadForces(self):
+        """Parse force elements using :data:`Parsers` and register generators."""
         for tree in self.trees:
             for child in tree.getroot():
                 if child.tag in Parsers:
@@ -149,6 +181,7 @@ class ForceField:
                     # raise ValueError(f"{child.tag} is not supported")
 
     def assignAtomTypes(self, topology: Topology):
+        """Set atom type and class on each atom from residue templates."""
         for res in topology.residues:
             if res.stdName not in TEMPLATES:
                 raise KeyError(f"ResidueTemplate {res.stdName} not defined")
@@ -158,8 +191,9 @@ class ForceField:
                 atom.setAtomType(atype)
                 aclass = self.atomTypes[atype].atomClass
                 atom.setAtomClass(aclass)
-    
+
     def findAtomTypes(self, element: ET.Element, numAtoms: int):
+        """Resolve type/class attributes to list of atom type name tuples (supports wildcards)."""
         useType = any(key.startswith("type") for key in element.attrib.keys())
         useClass = any(key.startswith("class") for key in element.attrib.keys())
         
@@ -188,9 +222,9 @@ class ForceField:
         
         atypes = list(product(*atypes))
         return atypes
-    
-    def createSystem(self, topology: Topology, **kwargs):
 
+    def createSystem(self, topology: Topology, **kwargs):
+        """Build a :class:`System` with particles and all generator terms for the given topology."""
         self.assignAtomTypes(topology)
         system = System()
         system.addMeta("name", topology.name)
@@ -212,7 +246,7 @@ class ForceField:
             else:
                 system.addTerms(terms)
         return system
-    
+
     def getParameters(self, asJaxNumpy: bool = True):
         params = {}
         for generator in self.generators:
@@ -220,13 +254,15 @@ class ForceField:
             params[name] = generator.getParameters(asJaxNumpy=asJaxNumpy)
         self._parameters = params
         return self._parameters
-    
+
     def updateParameters(self, param: Dict[str, Any]):
+        """Update each generator's parameters from a dict keyed by generator class name."""
         for generator in self.generators:
             name = generator.__class__.__name__
             generator.updateParameters(param[name])
-    
+
     def exportAtomTypes(self):
+        """Return XML string for AtomTypes section."""
         strs = []
         for tree in self.trees:
             atomTypes = tree.getroot().find("AtomTypes")
@@ -234,8 +270,9 @@ class ForceField:
                 strs.append(f'\t\t{xmlele2str(atomTypeElement)}')
         atypestr = '\t<AtomTypes>\n{}\n\t</AtomTypes>'.format('\n'.join(strs))
         return atypestr
-    
+
     def exportAtomTypeDefs(self):
+        """Return XML string for Residues section (atom type defs)."""
         strs = []
         for tree in self.trees:
             residues = tree.getroot().find("Residues")
@@ -248,6 +285,7 @@ class ForceField:
         return '\t<Residues>\n{}\n\t</Residues>'.format('\n'.join(strs))
 
     def save(self, path: os.PathLike):
+        """Write force field XML to file (atom types, residue defs, all force sections)."""
         forcestrs = []
         for force in self._forces:
             if isinstance(Parsers[force], list):
@@ -268,8 +306,9 @@ class ForceField:
     
 class Generator:
     """
-    Base class for a force generator
+    Base class for a force generator: holds parameters keyed by atom type/SMIRKS and creates terms for a topology.
     """
+
     def __init__(self, ff: ForceField, paramFields: List[str] = [], raiseError: bool = True):
         self.ff = ff
         # parameters
@@ -383,6 +422,7 @@ class Generator:
         self._parameters.update(param)
 
     def createTerms(self, topology: Topology, **kwargs):
+        """Build term list(s) for the given topology. Override in subclasses. Returns TermList or tuple of TermLists."""
         raise NotImplementedError()
 
     def raise_exception(self, msg: str, raiseError: bool = True):

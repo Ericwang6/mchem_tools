@@ -1,10 +1,24 @@
+"""PDB file reader; builds a :class:`Topology` from ATOM/HETATM records."""
+
 import os
 from pathlib import Path
 from ..topology import Bond, Atom, Topology, Residue
 
 
-
 def load_pdb(fname: os.PathLike) -> Topology:
+    """
+    Load a topology from a PDB file (ATOM/HETATM), match residue templates, and return editable topology.
+
+    Parameters
+    ----------
+    fname : os.PathLike
+        Path to the PDB file.
+
+    Returns
+    -------
+    Topology
+        Topology with residues and atoms; templates are matched so bonds and standard names are set.
+    """
     top = Topology(name=Path(fname).stem)
     residues = []
     with open(fname, 'r') as f:

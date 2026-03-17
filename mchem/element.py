@@ -1,7 +1,25 @@
+"""Periodic table data: element symbol, mass, and name."""
+
 from dataclasses import dataclass
+
 
 @dataclass
 class Element:
+    """
+    Dataclass for a chemical element.
+
+    Attributes
+    ----------
+    atomicNum : int
+        Atomic number.
+    symbol : str
+        Element symbol (e.g. ``'C'``, ``'H'``).
+    mass : float
+        Atomic mass in amu.
+    name : str
+        Full element name.
+    """
+
     atomicNum: int
     symbol: str
     mass: float

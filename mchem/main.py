@@ -1,3 +1,5 @@
+"""CLI entry point: convert PDB to SQLite DB with force-field parameters."""
+
 import argparse
 from mchem.forcefield import ForceField
 from mchem.fileformats import load_pdb

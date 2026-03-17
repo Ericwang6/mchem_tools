@@ -1,3 +1,5 @@
+"""Molecular topology: residues, atoms, bonds, and connectivity."""
+
 import uuid
 from typing import Optional, Union, List
 
@@ -9,7 +11,23 @@ from .template import ResidueTemplate
 
 
 class Residue:
+    """
+    A residue (e.g. amino acid) containing atoms and optional link to a :class:`Topology`.
+    """
+
     def __init__(self, name: str, number: int, chain: str = "A", insertionCode: str = ""):
+        """
+        Parameters
+        ----------
+        name : str
+            Residue name (e.g. ``"ALA"``).
+        number : int
+            Residue sequence number.
+        chain : str, optional
+            Chain identifier.
+        insertionCode : str, optional
+            PDB insertion code.
+        """
         self._atoms = []
         self._atoms_by_name = {}
         self._name = name
@@ -89,9 +107,23 @@ class Residue:
             rep += f"; id={self.idx}"
         rep += ">"
         return rep
-    
+
     def matchTemplate(self, template: ResidueTemplate, stdResidueName: bool = True):
-        
+        """
+        Match this residue to a template: align atom names (including alternates) and add template bonds to topology.
+
+        Parameters
+        ----------
+        template : ResidueTemplate
+            Template to match (atom names and bonds).
+        stdResidueName : bool, optional
+            If True, set residue name to template name.
+
+        Returns
+        -------
+        bool
+            True if match succeeded.
+        """
         # match atoms
         if len(self.atoms) != len(template.atoms):
             return False
@@ -136,7 +168,19 @@ class Residue:
 
 
 class Atom:
+    """
+    An atom with element, position, optional residue/topology, bonds, and force-field type/class.
+    """
+
     def __init__(self, name: str, element: str):
+        """
+        Parameters
+        ----------
+        name : str
+            Atom name (e.g. ``"CA"``).
+        element : str
+            Element symbol (key in :data:`ELEMENTS`).
+        """
         self._name = name
         self.element = ELEMENTS[element]
         self._residue = None
@@ -337,7 +381,19 @@ class Atom:
 
 
 class Bond:
+    """
+    A bond between two atoms with a bond order.
+    """
+
     def __init__(self, atom1: Atom, atom2: Atom, order: float):
+        """
+        Parameters
+        ----------
+        atom1, atom2 : Atom
+            Bonded atoms.
+        order : float
+            Bond order (e.g. 1.0, 2.0).
+        """
         self.atom1 = atom1
         self.atom2 = atom2
         self.order = order
@@ -348,6 +404,7 @@ class Bond:
     
 
 def require_editable(func):
+    """Decorator: raise if topology is not editable."""
     def new_func(self, *args, **kwargs):
         if not self.editable:
             raise RuntimeError("Topolgy is not editable")
@@ -357,6 +414,7 @@ def require_editable(func):
 
 
 def require_noneditable(func):
+    """Decorator: raise if topology is editable."""
     def new_func(self, *args, **kwargs):
         if self.editable:
             raise RuntimeError("Topology is editable")
@@ -367,7 +425,17 @@ def require_noneditable(func):
 
 
 class BondedAtoms:
+    """
+    Ordered list of bonded atoms, with hash/equality invariant under reversal (for undirected paths).
+    """
+
     def __init__(self, atoms: List[Atom]):
+        """
+        Parameters
+        ----------
+        atoms : List[Atom]
+            Ordered sequence of bonded atoms.
+        """
         self.atoms = atoms if isinstance(atoms, list) else list(atoms)
         tuple1 = tuple(atom for atom in self.atoms)
         tuple2 = tuple(self.atoms[i-1] for i in range(len(self), 0, -1))
@@ -397,10 +465,22 @@ class BondedAtoms:
     
     def __repr__(self):
         return repr(self.atoms)
-        
+
 
 class Topology:
+    """
+    Molecular topology: list of residues, bonds, and connectivity up to :attr:`_maxConnect` bonds.
+    """
+
     def __init__(self, name: str, maxConnect: int = 5):
+        """
+        Parameters
+        ----------
+        name : str
+            Topology name (e.g. from PDB).
+        maxConnect : int, optional
+            Maximum bond connectivity distance for generating bonded-atom lists.
+        """
         self._residues = []
         self._bonds = []
         self.name = name

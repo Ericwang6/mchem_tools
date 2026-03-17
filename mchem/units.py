@@ -1,3 +1,5 @@
+"""Physical constants and unit conversion factors for energy and length."""
+
 from scipy import constants
 
 BOHR2ANG = constants.value("atomic unit of length") * 1e10

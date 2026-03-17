@@ -1,8 +1,26 @@
+"""AMOEBA force field parser for ``.prm`` parameter files."""
+
 import os
 
 
 class AmoebaForceField:
+    """
+    Parser and container for AMOEBA force field parameters from a ``.prm`` file.
+
+    Stores atom types, VdW, bonds, angles, stretch-bend, Urey-Bradley,
+    out-of-plane bend, torsions, pi-torsions, stretch-torsion, angle-torsion,
+    torsion-torsion, multipoles, and polarizability parameters.
+    """
+
     def __init__(self, fname: os.PathLike):
+        """
+        Load AMOEBA parameters from a ``.prm`` file.
+
+        Parameters
+        ----------
+        fname : os.PathLike
+            Path to the AMOEBA parameter file.
+        """
         self.meta = {}
         self.atomType = {}
         self.vdw = {}
@@ -22,6 +40,14 @@ class AmoebaForceField:
         self.read_prm(fname)
 
     def read_prm(self, fname: os.PathLike):
+        """
+        Parse the given ``.prm`` file and populate all parameter dictionaries.
+
+        Parameters
+        ----------
+        fname : os.PathLike
+            Path to the AMOEBA parameter file.
+        """
         mode = 0
 
         def _parse_meta_line(line):
