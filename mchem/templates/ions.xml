@@ -1,0 +1,29 @@
+<Residues>
+  <Residue name="LI">
+    <Atom name="LI" />
+  </Residue>
+  <Residue name="NA">
+    <Atom name="NA" />
+  </Residue>
+  <Residue name="K">
+    <Atom name="K" />
+  </Residue>
+  <Residue name="RB">
+    <Atom name="RB" />
+  </Residue>
+  <Residue name="CS">
+    <Atom name="CS" />
+  </Residue>
+  <Residue name="F">
+    <Atom name="F" />
+  </Residue>
+  <Residue name="Cl">
+    <Atom name="Cl" />
+  </Residue>
+  <Residue name="Br">
+    <Atom name="Br" />
+  </Residue>
+  <Residue name="I">
+    <Atom name="I" />
+  </Residue>
+</Residues>
