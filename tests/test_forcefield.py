@@ -57,7 +57,7 @@ def _test_angle(ommSystem: mm.System, mchemSystem: System):
 def _test_angle_in_plane(ommSystem: mm.System, mchemSystem: System):
     anglesInPlaneRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaInPlaneAngle":
+        if force.getName() == "AmoebaInPlaneAngleForce":
             num = force.getNumBonds()
             for i in range(num):
                 param = force.getBondParameters(i)
@@ -87,7 +87,7 @@ def _test_ub(ommSystem: mm.System, mchemSystem: System):
 def _test_strbnd(ommSystem: mm.System, mchemSystem: System):
     strbndsRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaStretchBend":
+        if force.getName() == "AmoebaStretchBendForce":
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
                 strbndsRef.append(param[0])
@@ -101,7 +101,7 @@ def _test_strbnd(ommSystem: mm.System, mchemSystem: System):
 def _test_oop(ommSystem: mm.System, mchemSystem: System):
     oopsRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaOutOfPlaneBend":
+        if force.getName() == "AmoebaOutOfPlaneBendForce":
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
                 oopsRef.append(list(param[0]) + list(param[1]))
@@ -129,7 +129,7 @@ def _test_oop(ommSystem: mm.System, mchemSystem: System):
 def _test_pitor(ommSystem: mm.System, mchemSystem: System):
     pitorsRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaPiTorsion":
+        if force.getName() == "AmoebaPiTorsionForce":
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
                 pitorsRef.append(param[0])

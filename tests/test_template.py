@@ -28,12 +28,9 @@ def test_init_template(water_template):
     assert water_template.name == "HOH"
     assert "SOL" in water_template.altNames
     assert "WAT" in water_template.altNames
-    assert water_template.atoms[0]['name'] == "O"
-    assert water_template.atoms[0]['altNames'] == ['OW']
-    assert water_template.atoms[1]['name'] == "H1"
-    assert water_template.atoms[1]['altNames'] == ['HW1']
-    assert water_template.atoms[2]['name'] == "H2"
-    assert water_template.atoms[2]['altNames'] == ['HW2']
+    assert water_template.atoms["O"]["altNames"] == ["OW"]
+    assert water_template.atoms["H1"]["altNames"] == ["HW1"]
+    assert water_template.atoms["H2"]["altNames"] == ["HW2"]
     assert water_template.bonds[0]['atom1'] == "O"
     assert water_template.bonds[0]['atom2'] == "H1"
     assert water_template.bonds[0]['order'] == 1.0

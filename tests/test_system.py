@@ -1,14 +1,11 @@
 import pytest
-from pathlib import Path
 
 from mchem.system import System
 from mchem.terms import TermList
 from mchem.terms import AmoebaBond, CMAPTable
 
 
-def test_system():
-    path = Path(__file__).resolve().parent
-
+def test_system(tmp_path):
     system = System()
     system.addMeta("name", "test")
     system.addMeta("date", "08/26/2023")
@@ -23,16 +20,15 @@ def test_system():
     cmapTable.append(CMAPTable(phi=-180.0, psi=-150.0, ene=0.1))
     system.addTerms(cmapTable, name="CMAPTable1")
 
-    db = path / "test.db"
+    db = tmp_path / "test.db"
     system.save(db, overwrite=True)
 
     systemRead = System(db)
     assert len(systemRead['AmoebaBond']) == 2
     assert len(systemRead['CMAPTable1']) == 2
-    db.unlink()
 
 
-def test_water_system():
+def test_water_system(tmp_path):
     from mchem.terms.bonded import AmoebaBond, AmoebaAngle 
     from mchem.terms.nonbonded import Particle, AmoebaVdw147, Multipole, IsotropicPolarization, MultipoleAxisType
     bCubic = -2.55
@@ -79,5 +75,5 @@ def test_water_system():
     vdws.append(AmoebaVdw147(2, 2.6550, 0.0135, 0, 0.910))
     water.addTerms(vdws)
 
-    water.save("./water.db", overwrite=True)
+    water.save(tmp_path / "water.db", overwrite=True)
 
