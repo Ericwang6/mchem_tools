@@ -27,6 +27,7 @@ mchem-tools = "mchem.main:main"
 dev = [
   "pytest",
   "pytest-cov",
+  "openmm"
 ]
 docs = [
   "sphinx>=5.0.0",
