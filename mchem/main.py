@@ -1,11 +1,16 @@
 """CLI entry point: convert PDB to SQLite DB, solvate PDB, etc."""
 
+import os
+
+import glob
+
 import rich_click as click
 
 from mchem.forcefield import ForceField
 from mchem.fileformats import load_pdb, read_pdb_box, write_pdb
 from mchem.system import Box
 from mchem.solvate import solvate
+from mchem.template import loadTemplateDefinitions
 
 
 @click.group()
@@ -31,6 +36,13 @@ def main() -> None:
     help="Force field XML file.",
 )
 @click.option(
+    "--amber",
+    is_flag=True,
+    default=False,
+    type=click.BOOL,
+    help="Use AMBER-style residue templates",
+)
+@click.option(
     "-o",
     "--output",
     "output_path",
@@ -38,8 +50,14 @@ def main() -> None:
     type=click.Path(path_type=str),
     help="Output SQLite DB file.",
 )
-def convert(input_path: str, forcefield: str, output_path: str) -> None:
+def convert(input_path: str, amber: bool, forcefield: str, output_path: str) -> None:
     """Convert PDB to SQLite-DB formatted force-field parameters."""
+
+    template_path = "amber" if amber else "amoeba"
+    for fxml in glob.glob(
+        os.path.join(os.path.dirname(__file__), f"templates/{template_path}/*.xml")
+    ):
+        loadTemplateDefinitions(fxml)
     top = load_pdb(input_path)
     ff = ForceField(forcefield)
     system = ff.createSystem(top)

@@ -46,6 +46,15 @@ class AmoebaVdw147:
     reduction: float = 1.0
     paramIdx: int = -1
 
+@dataclass
+class AmberNonbonded:
+    "AMBER Nonbonded parameters"
+    idx: int
+    charge: float
+    epsilon: float
+    sigma: float
+    paramIdx: int = -1
+
 
 @dataclass
 class Multipole:
