@@ -117,11 +117,15 @@ def loadTemplateDefinitions(fname: os.PathLike):
 
 
 def loadNamedTemplateDefinitions(ffname: str):
+    TEMPLATES.clear()
+
+    for fxml in glob.glob(os.path.join(os.path.dirname(__file__), "templates/*.xml")):
+        loadTemplateDefinitions(fxml)
+
     for fxml in glob.glob(
         os.path.join(os.path.dirname(__file__), f"templates/{ffname}/*.xml")
     ):
         loadTemplateDefinitions(fxml)
 
 
-for fxml in glob.glob(os.path.join(os.path.dirname(__file__), "templates/*.xml")):
-    loadTemplateDefinitions(fxml)
+loadNamedTemplateDefinitions("amoeba")
