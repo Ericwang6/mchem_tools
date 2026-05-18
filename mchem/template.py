@@ -116,5 +116,12 @@ def loadTemplateDefinitions(fname: os.PathLike):
             TEMPLATES[key] = ResidueTemplate.fromXMLData(ele)
 
 
+def loadNamedTemplateDefinitions(ffname: str):
+    for fxml in glob.glob(
+        os.path.join(os.path.dirname(__file__), f"templates/{ffname}/*.xml")
+    ):
+        loadTemplateDefinitions(fxml)
+
+
 for fxml in glob.glob(os.path.join(os.path.dirname(__file__), "templates/*.xml")):
     loadTemplateDefinitions(fxml)
