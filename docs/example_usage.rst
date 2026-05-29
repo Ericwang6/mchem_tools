@@ -1,9 +1,10 @@
 Example: Solvate and Parameterize
 =================================
 
-This page walks through command-line usage: solvating a solute PDB, then
-parameterizing the solvated system and saving it to a SQLite database. The
-example uses the provided peptide structure ``examples/ace_ala_nme.pdb``.
+This page walks through command-line usage: solvating a solute PDB,
+parameterizing the solvated system and saving it to a SQLite database, then
+preparing an mchem input file that references that database. The example uses
+the provided peptide structure ``examples/ace_ala_nme.pdb``.
 
 Prerequisites
 -------------
@@ -32,7 +33,7 @@ termini, and fill missing atoms or residues before running ``solvate`` or
 Example: Solvate then parameterize
 ----------------------------------
 
-Two-step workflow using the command line.
+Three-step workflow using the command line.
 
 Step 1 — Solvate
 ~~~~~~~~~~~~~~~~~
@@ -55,12 +56,42 @@ Step 2 — Parameterize (convert) to DB
 
 - **Input**: The solvated PDB from step 1.
 - **Output**: A SQLite database (e.g. ``system.db``) containing force-field
-  terms.
+  parameters. See :doc:`db_format` for the on-disk schema and an example
+  (``tests/data/DHFR.db``).
 
 .. code-block:: bash
 
    mchem-tools convert -i solvated.pdb -o system.db -f amoebabio18.xml
 
+Step 3 — Prepare mchem input
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Input**: The SQLite database from step 2 (e.g. ``system.db``).
+- **Output**: An mchem input file that points to the database and sets simulation
+  parameters.
+
+Organize the mchem input in a ``$mchem`` … ``$end`` block. Set ``input_db`` to
+the path of the parameterized database and choose force-field and run settings
+as needed:
+
+.. code-block:: plain
+
+   $mchem
+   input_db = /path/to/system.db
+   force_field = amoebabio09 !Force field parameter file
+   vdw_cutoff = 9.0 !vdw cutoff [A]
+   ewald_cutoff = 7.0 !Real-space Ewald cutoff [A]
+   K = [194, 194, 194] !Number of PME grid points (x, y, z)
+   nsteps = 1
+   dt = 0.001 !Time step size [ps]
+   pol_thresh = 1e-5 !Induced dipole convergence threshold for SCF [Debye/atom]
+   T_ref = 298.0 !Reference temperature [K]
+   pres_ref = 1.0 !Reference pressure [Atm]
+   ensemble = nve
+   polarization_solver = cg !Induced dipole evaluation algorithm
+   print_precision = 12
+   use_new_frontend = true
+   $end
 
 What the solvate command does
 ------------------------------

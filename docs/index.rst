@@ -8,6 +8,7 @@ M-Chem front-end: convert PDB to SQLite-DB formatted force-field parameters.
    :caption: Contents:
 
    example_usage
+   db_format
    api/index
 
 Indices and tables

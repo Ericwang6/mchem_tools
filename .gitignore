@@ -162,3 +162,5 @@ workspace/
 debug/
 jaximpl/
 tmp/
+*.db-shm
+*.db-wal
