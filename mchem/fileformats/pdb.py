@@ -115,6 +115,80 @@ def _box_vectors_to_lengths_angles(
     return a, b, c, alpha, beta, gamma
 
 
+def format_cryst1_record(
+    a: float, b: float, c: float, alpha: float, beta: float, gamma: float,
+) -> str:
+    """
+    Format a PDB ``CRYST1`` record from cell lengths and angles.
+
+    Parameters
+    ----------
+    a, b, c : float
+        Cell lengths in Angstroms.
+    alpha, beta, gamma : float
+        Cell angles in degrees.
+
+    Returns
+    -------
+    str
+        A single ``CRYST1`` line terminated by a newline.
+    """
+    return (f"CRYST1{a:9.3f}{b:9.3f}{c:9.3f}"
+            f"{alpha:7.2f}{beta:7.2f}{gamma:7.2f} P 1           1\n")
+
+
+def format_atom_record(
+    serial: int,
+    name: str,
+    resname: str,
+    chain: str,
+    resnum: int,
+    x: float,
+    y: float,
+    z: float,
+    symbol: str,
+    hetatm: Optional[bool] = None,
+) -> str:
+    """
+    Format a single PDB ``ATOM``/``HETATM`` record.
+
+    Parameters
+    ----------
+    serial : int
+        Atom serial number (1-based).
+    name : str
+        Atom name.
+    resname : str
+        Residue name.
+    chain : str
+        Chain identifier (single character).
+    resnum : int
+        Residue sequence number.
+    x, y, z : float
+        Cartesian coordinates in Angstroms.
+    symbol : str
+        Element symbol.
+    hetatm : bool, optional
+        Force ``HETATM`` (True) or ``ATOM`` (False). If None, decide from
+        :data:`_HETATM_RESIDUES` based on ``resname``.
+
+    Returns
+    -------
+    str
+        A single record line terminated by a newline.
+    """
+    if hetatm is None:
+        hetatm = resname in _HETATM_RESIDUES
+    record = "HETATM" if hetatm else "ATOM  "
+    name_field = f" {name:<3s}" if len(name) < 4 else name
+    return (
+        f"{record}{serial:5d} {name_field:4s}"
+        f" {resname:>3s} {chain}{resnum:4d}"
+        f"    {x:8.3f}{y:8.3f}{z:8.3f}"
+        f"  1.00  0.00          {symbol:>2s}\n"
+    )
+
+
 def write_pdb(
     fname: os.PathLike,
     topology: Topology,
@@ -139,20 +213,18 @@ def write_pdb(
     with open(fname, "w") as f:
         if box_vectors is not None:
             a, b, c, alpha, beta, gamma = _box_vectors_to_lengths_angles(box_vectors)
-            f.write(f"CRYST1{a:9.3f}{b:9.3f}{c:9.3f}"
-                    f"{alpha:7.2f}{beta:7.2f}{gamma:7.2f} P 1           1\n")
+            f.write(format_cryst1_record(a, b, c, alpha, beta, gamma))
 
         atom_serial = 1
         for res in topology.residues:
-            record = "HETATM" if res.name in _HETATM_RESIDUES else "ATOM  "
+            hetatm = res.name in _HETATM_RESIDUES
             for atom in res.atoms:
                 x, y, z = positions[atom.idx]
-                name_field = f" {atom.name:<3s}" if len(atom.name) < 4 else atom.name
                 f.write(
-                    f"{record}{atom_serial:5d} {name_field:4s}"
-                    f" {res.name:>3s} {res.chain}{res.number:4d}"
-                    f"    {x:8.3f}{y:8.3f}{z:8.3f}"
-                    f"  1.00  0.00          {atom.symbol:>2s}\n"
+                    format_atom_record(
+                        atom_serial, atom.name, res.name, res.chain, res.number,
+                        x, y, z, atom.symbol, hetatm=hetatm,
+                    )
                 )
                 atom_serial += 1
         f.write("END\n")

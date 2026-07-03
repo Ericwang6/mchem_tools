@@ -1,0 +1,338 @@
+
+                Welcome to Q-Chem(M-Chem)
+     A Quantum Leap Into The Future Of Chemistry
+
+ Jagna Witek, Evgeny Epifanovsky, Xintian Feng, Joseph Heindel, Xingyi Guan,
+ Itai Leven, Hongxia Hao, Pavithra Naullage, Allen LaCour, Selim Sami,
+ M. F. S. J. Menger, Eric Berquist
+
+ Q-Chem(M-Chem) begins on Fri Jul  3 04:07:56 2026
+
+ Input file: aladi_water_box_md.in
+ Scratch folder: /pscratch/sd/e/eric6/mchem-stable-0305/generate_hdf5//aladi_water_box_md.scratch20260703040756
+ Auxillary files located at: /pscratch/sd/e/eric6/mchem-stable/.scratch
+
+ -------------------------------------------------------------
+ User input:
+ -------------------------------------------------------------
+ $box
+ dimensions = [30.0, 30.0, 30.0] !Simulation box size [A]
+ $end
+ 
+ $mchem
+ input_db = ./aladi_water_box.db
+ force_field = amoeba09 !Force field parameter file
+ vdw_cutoff = 12.0 !vdw cutoff [A]
+ ewald_cutoff = 7.0 !Real-space Ewald cutoff [A]
+ K = [24, 24, 24] !Number of PME grid points (x, y, z)
+ nsteps = 10
+ dt = 0.001 !Time step size [ps]
+ pol_thresh = 1e-5 !Induced dipole convergence threshold for SCF [Debye/atom]
+ T_ref = 298.0 !Reference temperature [K]
+ pres_ref = 1.0 !Reference pressure [Atm]
+ ensemble = nvt
+ thermostat_dt = 0.2 !Thermostat time step [ps]
+ polarization_solver = cg !Induced dipole evaluation algorithm (Conjugate gradient, iEL/SCF, iEL/0-SCF)
+ print_precision = 12
+ trajectory_write_frq = 1
+ summary_print_frq = 1
+ use_new_frontend = true
+ output_dir = .
+ $end
+ 
+ -------------------------------------------------------------
+
+Ensemble: nvt
+ Number of levels for octree domain decomposition = 2
+ Number of copies of the shared array for OpenMP = 16
+
+ -------------------------------------------------------------
+ Topology summary:
+ -------------------------------------------------------------
+ Number of atoms = 2602
+ Number of bonds = 1741
+ Number of angles = 896
+ Number of UB terms = 860
+ Number of stretch-bend coupling terms = 27
+ Number of torsional angles = 41
+ -------------------------------------------------------------
+
+ Atomic velocities initialized from the Maxwell-Boltzmann distribution
+
+ -------------------------------------------------------------
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              23.711420975231
+ Angle bending                219.951703823819
+ Urey-Bradley coupling        -10.355604253105
+ Bond-angle coupling          0.030691696452
+ Torsional rotation           5.654208920291
+ Out-of-plane bending         2.069401326634
+ Pi-orbital torsion           2.792212962068
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                3890.465181225849
+ Permanent electrostatics     -7882.239918343417
+ Polarization                 -3510.762292891813
+ Total                        -7261.475207520059
+ Total potential energy       -7258.682994557992
+
+ -------------------------------------------------------------
+                   Starting the MD simulation 
+ -------------------------------------------------------------
+
+ Step 1, time = 0.000 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              252.238131934502
+ Angle bending                250.595315103527
+ Urey-Bradley coupling        -12.181123099331
+ Bond-angle coupling          0.090425706667
+ Torsional rotation           5.540867892833
+ Out-of-plane bending         2.192683193559
+ Pi-orbital torsion           2.694752115379
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                3930.295511635115
+ Permanent electrostatics     -7932.287411485570
+ Polarization                 -3541.782730277237
+ Total                        -7045.298329395934
+ Total potential energy       -7042.603577280557
+
+ Kinetic energy [kcal/mole]   1970.376099377924 
+ Temperature [K]              254.141161442232
+ Pressure [Atm]               15578.598406359108
+
+ -------------------------------------------------------------
+
+ Step 2, time = 0.001 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              568.400685608697
+ Angle bending                318.139463123091
+ Urey-Bradley coupling        -14.878648465154
+ Bond-angle coupling          0.188675587625
+ Torsional rotation           5.428432849456
+ Out-of-plane bending         2.302561552875
+ Pi-orbital torsion           2.589574814720
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                4007.252553602263
+ Permanent electrostatics     -8037.107993963625
+ Polarization                 -3609.199847236190
+ Total                        -6759.474117340960
+ Total potential energy       -6756.884542526242
+
+ Kinetic energy [kcal/mole]   1713.932509526334 
+ Temperature [K]              221.064800137466
+ Pressure [Atm]               9159.300777466367
+
+ -------------------------------------------------------------
+
+ Step 3, time = 0.002 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              564.993506602283
+ Angle bending                390.497639485579
+ Urey-Bradley coupling        -15.187919213496
+ Bond-angle coupling          0.324494928249
+ Torsional rotation           5.312395089628
+ Out-of-plane bending         2.394388553135
+ Pi-orbital torsion           2.481112196461
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                4086.021656232782
+ Permanent electrostatics     -8161.539802420763
+ Polarization                 -3687.617850418453
+ Total                        -6814.801491161058
+ Total potential energy       -6812.320378964598
+
+ Kinetic energy [kcal/mole]   1753.108775716895 
+ Temperature [K]              226.117795752762
+ Pressure [Atm]               -93.657562402310
+
+ -------------------------------------------------------------
+
+ Step 4, time = 0.003 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              428.370647734739
+ Angle bending                432.706027178004
+ Urey-Bradley coupling        -14.177145150916
+ Bond-angle coupling          0.480813456016
+ Torsional rotation           5.185404499947
+ Out-of-plane bending         2.459262916294
+ Pi-orbital torsion           2.379715546172
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                4130.442458065720
+ Permanent electrostatics     -8253.727539381382
+ Polarization                 -3741.803945721105
+ Total                        -7010.064016402685
+ Total potential energy       -7007.684300856512
+
+ Kinetic energy [kcal/mole]   1929.298484705621 
+ Temperature [K]              248.842927919509
+ Pressure [Atm]               -7304.394618405252
+
+ -------------------------------------------------------------
+
+ Step 5, time = 0.004 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              432.728156094092
+ Angle bending                424.700160772943
+ Urey-Bradley coupling        -14.093515126823
+ Bond-angle coupling          0.621557090551
+ Torsional rotation           5.040885823298
+ Out-of-plane bending         2.492323674830
+ Pi-orbital torsion           2.293763046445
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                4118.771262535422
+ Permanent electrostatics     -8273.660744375842
+ Polarization                 -3744.944286757230
+ Total                        -7048.344200268760
+ Total potential energy       -7046.050437222315
+
+ Kinetic energy [kcal/mole]   1968.142577247367 
+ Temperature [K]              253.853079431622
+ Pressure [Atm]               -8023.930583769058
+
+ -------------------------------------------------------------
+
+ Step 6, time = 0.005 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              569.544982952323
+ Angle bending                369.552696599745
+ Urey-Bradley coupling        -14.799063711311
+ Bond-angle coupling          0.703622804742
+ Torsional rotation           4.876172191578
+ Out-of-plane bending         2.496414751460
+ Pi-orbital torsion           2.226650850607
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                4050.988673394032
+ Permanent electrostatics     -8219.160301653843
+ Polarization                 -3696.169335474670
+ Total                        -6931.966138145945
+ Total potential energy       -6929.739487295339
+
+ Kinetic energy [kcal/mole]   1869.436254902786 
+ Temperature [K]              241.121835173095
+ Pressure [Atm]               -2081.977118778440
+
+ -------------------------------------------------------------
+
+ Step 7, time = 0.006 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              579.865982711100
+ Angle bending                289.670833857788
+ Urey-Bradley coupling        -14.031248569386
+ Bond-angle coupling          0.697343749637
+ Torsional rotation           4.693704385145
+ Out-of-plane bending         2.481105701983
+ Pi-orbital torsion           2.177753947091
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                3948.915438905983
+ Permanent electrostatics     -8126.282298646990
+ Polarization                 -3620.716982185141
+ Total                        -6934.706120089881
+ Total potential energy       -6932.528366142788
+
+ Kinetic energy [kcal/mole]   1887.798498763832 
+ Temperature [K]              243.490216510549
+ Pressure [Atm]               6441.736805637272
+
+ -------------------------------------------------------------
+
+ Step 8, time = 0.007 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              284.421023759714
+ Angle bending                215.347426836775
+ Urey-Bradley coupling        -10.686252745809
+ Bond-angle coupling          0.603990441246
+ Torsional rotation           4.500830126948
+ Out-of-plane bending         2.460410307576
+ Pi-orbital torsion           2.143799271519
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                3848.688672154993
+ Permanent electrostatics     -8044.611352188904
+ Polarization                 -3552.918772563740
+ Total                        -7252.194023871200
+ Total potential energy       -7250.050224599683
+
+ Kinetic energy [kcal/mole]   2180.516375005087 
+ Temperature [K]              281.245273053481
+ Pressure [Atm]               12788.010528973069
+
+ -------------------------------------------------------------
+
+ Step 9, time = 0.008 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              42.000954077728
+ Angle bending                172.126456099783
+ Urey-Bradley coupling        -7.823589259029
+ Bond-angle coupling          0.460913482993
+ Torsional rotation           4.308602177514
+ Out-of-plane bending         2.450396161910
+ Pi-orbital torsion           2.119661544151
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                3785.040648855213
+ Permanent electrostatics     -8009.205197571766
+ Polarization                 -3518.226593211768
+ Total                        -7528.867409187425
+ Total potential energy       -7526.747747643272
+
+ Kinetic energy [kcal/mole]   2430.176616075277 
+ Temperature [K]              313.446710967572
+ Pressure [Atm]               15332.575372897176
+
+ -------------------------------------------------------------
+
+ Step 10, time = 0.009 [ps]
+
+ Potential energy components [kcal/mole]:
+
+ Bond stretching              222.912742920335
+ Angle bending                172.347601084818
+ Urey-Bradley coupling        -8.846462690158
+ Bond-angle coupling          0.324504812633
+ Torsional rotation           4.129011674274
+ Out-of-plane bending         2.466073654865
+ Pi-orbital torsion           2.099468600593
+ Torsion-torsion coupling     0.000000000000
+ van der Waals                3774.861302184756
+ Permanent electrostatics     -8033.686165081332
+ Polarization                 -3527.206569140174
+ Total                        -7392.697960579982
+ Total potential energy       -7390.598491979390
+
+ Kinetic energy [kcal/mole]   2316.358037646734 
+ Temperature [K]              298.766272179938
+ Pressure [Atm]               14205.407714266172
+
+ -------------------------------------------------------------
+                   Simulation finished successfully
+ -------------------------------------------------------------
+
+ Number of steps: 10
+ Total simulation time [ps]: 0.010
+ Wall time [s]: 6
+
+ Fri Jul  3 04:08:03 2026
+
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using M-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+

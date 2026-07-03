@@ -1,0 +1,24 @@
+$box
+dimensions = [30.0, 30.0, 30.0] !Simulation box size [A]
+$end
+
+$mchem
+input_db = ./aladi_water_box.db
+force_field = amoeba09 !Force field parameter file
+vdw_cutoff = 12.0 !vdw cutoff [A]
+ewald_cutoff = 7.0 !Real-space Ewald cutoff [A]
+K = [24, 24, 24] !Number of PME grid points (x, y, z)
+nsteps = 10
+dt = 0.001 !Time step size [ps]
+pol_thresh = 1e-5 !Induced dipole convergence threshold for SCF [Debye/atom]
+T_ref = 298.0 !Reference temperature [K]
+pres_ref = 1.0 !Reference pressure [Atm]
+ensemble = nvt
+thermostat_dt = 0.2 !Thermostat time step [ps]
+polarization_solver = cg !Induced dipole evaluation algorithm (Conjugate gradient, iEL/SCF, iEL/0-SCF)
+print_precision = 12
+trajectory_write_frq = 1
+summary_print_frq = 1
+use_new_frontend = true
+output_dir = .
+$end

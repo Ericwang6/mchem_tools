@@ -13,6 +13,7 @@ dependencies = [
   "scipy",
   "networkx",
   "rich-click",
+  "h5py",
 ]
 
 classifiers = [

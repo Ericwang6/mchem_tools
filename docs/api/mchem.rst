@@ -29,6 +29,11 @@ Core
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: mchem.trjconv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: mchem.units
    :members:
    :undoc-members:

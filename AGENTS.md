@@ -7,7 +7,8 @@ Guidance for AI agents and contributors working in this repository.
 This repo contains the front-end of **M-Chem**, which is a proprietary molecular dynamics package developed by Q-Chem. It features high and scalable performance support for fixed-charge models, polarziable force field (AMOEBA-like) and QM/MM simulations. The main goal of this front end is to help users to setup the simulation system. It takes PDB structures (protein), adds solvents/ions, parametrize the system with XML-format force field definitions, and convert into SQLite databases for downstream M-Chem workflows.
 
 - **Package name:** `mchem` (see `pyproject.toml`)
-- **CLI:** `mchem-tools` (`mchem.main:main`) — `convert` (PDB → `.db`), `solvate`, etc.
+- **Runtime deps:** `numpy`, `scipy`, `networkx`, `rich-click`, `h5py` (HDF5 trajectory I/O)
+- **CLI:** `mchem-tools` (`mchem.main:main`) — `convert` (PDB → `.db`), `solvate`, `trjconv` (trajectory → PDB), etc.
 - **Python:** `>=3.9` (CI runs on 3.11)
 - **Published docs:** [GitHub Pages](https://ericwang6.github.io/mchem_tools/) (built from `docs/` on `master`)
 
@@ -27,16 +28,17 @@ pip install -e ".[docs]"
 
 ```
 mchem/
-├── main.py              # CLI (rich-click): convert, solvate, ...
+├── main.py              # CLI (rich-click): convert, solvate, trjconv, ...
 ├── system.py            # System: aggregate force terms; load/save SQLite .db
 ├── topology.py          # Topology, Residue, Atom, Bond — molecular graph from PDB
 ├── template.py          # Residue templates from XML
 ├── element.py           # Element data
 ├── units.py             # Unit helpers
 ├── solvate.py           # Solvation (box, water placement)
+├── trjconv.py           # Trajectory conversion (HDF5 traj + .db topology → PDB); OOP/extensible
 ├── amoeba.py            # Amoeba-specific helpers
 ├── fileformats/
-│   └── pdb.py           # read/write PDB, CRYST1 box
+│   └── pdb.py           # read/write PDB, CRYST1 box, record formatters
 ├── forcefield/
 │   ├── base.py          # ForceField, Generator, XML parsers
 │   ├── generators.py    # Per-force generators (bonds, angles, multipoles, ...)
@@ -57,7 +59,14 @@ mchem/
 4. Optional `Box` from PDB CRYST1 → `system.addTerm`
 5. `System.save` → SQLite `.db`
 
-**Tests and fixtures:** `tests/` mirrors package concerns (`test_system.py`, `test_forcefield.py`, `test_pdb.py`, …). PDB/DB/JSON fixtures live under `tests/data/`. Examples under `examples/`.
+**Data flow (typical `trjconv` path):**
+
+1. `DBTopologyProvider(.db)` → ordered `AtomInfo` list (from the `Particle` table)
+2. `HDF5TrajectoryReader(.h5)` → `Frame` (coordinates `(natoms, 3)`, box, time)
+3. `PDBTrajectoryWriter` writes the selected frame → `.pdb`
+   (orchestrated by `mchem.trjconv.trjconv`; formats selected by file extension)
+
+**Tests and fixtures:** `tests/` mirrors package concerns (`test_system.py`, `test_forcefield.py`, `test_pdb.py`, `test_trjconv.py`, …). PDB/DB/JSON fixtures live under `tests/data/`; HDF5 trajectory fixtures and their format notes live under `tests/generate_hdf5/`. Examples under `examples/`.
 
 ## Keeping this file current
 

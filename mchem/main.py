@@ -11,6 +11,7 @@ from mchem.fileformats import load_pdb, read_pdb_box, write_pdb
 from mchem.system import Box
 from mchem.solvate import solvate
 from mchem.template import loadNamedTemplateDefinitions
+from mchem.trjconv import trjconv
 
 
 @click.group()
@@ -151,6 +152,47 @@ def solvate_cmd(
     )
     write_pdb(output_path, solv_top, solv_pos, box_vectors=box_vectors)
     click.echo(f"Solvated PDB written to {output_path}")
+
+
+@main.command("trjconv")
+@click.option(
+    "-p",
+    "--topology",
+    "topology_path",
+    required=True,
+    type=click.Path(exists=True, path_type=str),
+    help="Topology file (currently .db).",
+)
+@click.option(
+    "-i",
+    "--input",
+    "input_path",
+    required=True,
+    type=click.Path(exists=True, path_type=str),
+    help="Input M-Chem HDF5 trajectory (.h5).",
+)
+@click.option(
+    "-o",
+    "--output",
+    "output_path",
+    required=True,
+    type=click.Path(path_type=str),
+    help="Output structure file (currently .pdb).",
+)
+@click.option(
+    "-f",
+    "--frame",
+    default=-1,
+    type=int,
+    show_default=True,
+    help="Frame to extract (native 1-based index; -1 selects the last frame).",
+)
+def trjconv_cmd(
+    topology_path: str, input_path: str, output_path: str, frame: int
+) -> None:
+    """Convert an M-Chem trajectory frame to a PDB file."""
+    written = trjconv(topology_path, input_path, output_path, frame=frame)
+    click.echo(f"Wrote frame {written.index} to {output_path}")
 
 
 if __name__ == "__main__":
