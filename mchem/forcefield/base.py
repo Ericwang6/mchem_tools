@@ -58,6 +58,13 @@ class AtomType:
 # Parsers for force XML elements
 Parsers = {}
 
+NAMED_FORCEFIELDS = {
+    "amber": "amber19_protein.xml",
+    "amber14": "amber14_protein.xml",
+    "amber19": "amber19_protein.xml",
+    "amoeba": "amoebabio18.xml",
+}
+
 
 class ForceField:
     """
@@ -88,11 +95,16 @@ class ForceField:
         self.loadAtomTypeDefs()
         self.loadForces()
 
-    def processFileNames(self, files):
+    def processFileNames(self, filenames: tuple[str]):
         """Resolve file paths; search next to this module if not found. Returns list of paths."""
         dirname = os.path.dirname(__file__)
-        files = list(files) if isinstance(files, tuple) else [files]
+        files = list(filenames) if isinstance(filenames, tuple) else [filenames]
         for i in range(len(files)):
+            files[i] = (
+                NAMED_FORCEFIELDS[files[i]]
+                if files[i] in NAMED_FORCEFIELDS
+                else files[i]
+            )
             if not os.path.exists(files[i]):
                 trial = os.path.join(dirname, files[i])
                 if not os.path.isfile(trial):
