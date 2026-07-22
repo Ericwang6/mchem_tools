@@ -37,11 +37,18 @@ def main() -> None:
     help="Force field XML file.",
 )
 @click.option(
-    "--amber",
+    "--amber14",
     is_flag=True,
     default=False,
     type=click.BOOL,
-    help="Use AMBER-style residue templates",
+    help="Use AMBER14-style residue templates",
+)
+@click.option(
+    "--amber19",
+    is_flag=True,
+    default=False,
+    type=click.BOOL,
+    help="Use AMBER19-style residue templates",
 )
 @click.option(
     "-o",
@@ -51,11 +58,19 @@ def main() -> None:
     type=click.Path(path_type=str),
     help="Output SQLite DB file.",
 )
-def convert(input_path: str, amber: bool, forcefield: str, output_path: str) -> None:
+def convert(
+    input_path: str, amber14: bool, amber19: bool, forcefield: str, output_path: str
+) -> None:
     """Convert PDB to SQLite-DB formatted force-field parameters."""
+    templates = "amoeba"
+    if amber14:
+        templates = "amber14"
+    if amber19:
+        templates = "amber19"
+    loadNamedTemplateDefinitions(templates)
 
-    loadNamedTemplateDefinitions("amber" if amber else "amoeba")
     top = load_pdb(input_path)
+
     ff = ForceField(forcefield)
     system = ff.createSystem(top)
     box = read_pdb_box(input_path)
@@ -119,11 +134,18 @@ def convert(input_path: str, amber: bool, forcefield: str, output_path: str) -> 
     help="Negative ion type (e.g. Cl-). Default: Cl-.",
 )
 @click.option(
-    "--amber",
+    "--amber14",
     is_flag=True,
     default=False,
     type=click.BOOL,
-    help="Use AMBER-style residue templates",
+    help="Use AMBER14-style residue templates",
+)
+@click.option(
+    "--amber19",
+    is_flag=True,
+    default=False,
+    type=click.BOOL,
+    help="Use AMBER19-style residue templates",
 )
 def solvate_cmd(
     input_path: str,
@@ -134,10 +156,16 @@ def solvate_cmd(
     ionic_strength: float,
     positive_ion: str,
     negative_ion: str,
-    amber: bool,
+    amber14: bool,
+    amber19: bool,
 ) -> None:
     """Solvate a solute PDB with water and ions in a periodic box."""
-    loadNamedTemplateDefinitions("amber" if amber else "amoeba")
+    templates = "amoeba"
+    if amber14:
+        templates = "amber14"
+    if amber19:
+        templates = "amber19"
+    loadNamedTemplateDefinitions(templates)
     top = load_pdb(input_path)
     positions = top.coordinates
     solv_top, solv_pos, box_vectors = solvate(

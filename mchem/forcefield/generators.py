@@ -42,6 +42,8 @@ from ..terms import (
     AnisotropicPolarization,
     MBUCBChargeTransfer,
     AmberNonbonded,
+    AmberCMAPGrid,
+    AmberCMAP,
 )
 
 
@@ -1462,3 +1464,70 @@ class MBUCBChargeTransferGenerator(Generator):
 
 
 Parsers["MBUCBChargeTransferForce"] = MBUCBChargeTransferGenerator
+
+
+class AmberCMAPGenerator(Generator):
+    """Generator for AMBER19-style CMAP terms"""
+
+    def __init__(self, ff):
+        super().__init__(ff, [], False)
+        self._grids = {}
+        self._patterns = {}
+
+    @staticmethod
+    def parseElement(element: ET.Element, ff: ForceField):
+        generator = ff.addGeneratorWithClass(AmberCMAPGenerator)
+        generator.addTerm(element)
+
+    def addTerm(self, element: ET.Element):
+        for gridIdx, cmap in enumerate(element.findall("Map")):
+            if cmap.text is None:
+                continue
+            grid = AmberCMAPGrid(gridIdx=gridIdx, grid=cmap.text)
+            self._grids[gridIdx] = grid
+
+        for termIdx, patt in enumerate(element.findall("Torsion")):
+            atom_classes = (
+                patt.get("class1", ""),
+                patt.get("type2", ""),
+                patt.get("type3", ""),
+                patt.get("type4", ""),
+                patt.get("class5", ""),
+            )
+            gridIdx = patt.get("map")
+            if gridIdx is not None:
+                self._patterns[atom_classes] = int(gridIdx)
+                self._patterns[reversed(atom_classes)] = int(gridIdx)
+
+    def createTerms(self, topology: Topology, **kwargs):
+        cmapTerms = TermList(AmberCMAP)
+
+        used_grids = set()
+        for chain in topology.bondedAtoms[4]:
+            atoms = chain.atoms
+            atom_classes = tuple(a.atomType for a in atoms)
+            match = self._patterns.get(atom_classes)
+            if match is not None:
+                used_grids.add(match)
+                cmapTerms.append(
+                    AmberCMAP(
+                        match,
+                        atoms[0].idx,
+                        atoms[1].idx,
+                        atoms[2].idx,
+                        atoms[3].idx,
+                        atoms[1].idx,
+                        atoms[2].idx,
+                        atoms[3].idx,
+                        atoms[4].idx,
+                    )
+                )
+
+        gridTerms = TermList(AmberCMAPGrid)
+        for gridIdx in used_grids:
+            gridTerms.append(self._grids[gridIdx])
+
+        return cmapTerms, gridTerms
+
+
+Parsers["CMAPTorsionForce"] = AmberCMAPGenerator
