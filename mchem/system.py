@@ -8,11 +8,24 @@ from dataclasses import dataclass, fields, is_dataclass
 
 from .terms import TermList
 from .terms.bonded import (
-    HarmonicBond, AmoebaBond, HarmonicAngle, AmoebaAngle,
-    AmoebaAngleInPlane, AmoebaStretchBend, AmoebaUreyBradley,
-    AmoebaOutOfPlaneBend, PeriodicTorsion, AmoebaStretchTorsion,
-    AmoebaAngleTorsion, AmoebaPiTorsion, CMAPTable, CMAP,
-    AmoebaTorsionTorsion, AmoebaTorsionTorsionGrid,
+    HarmonicBond,
+    AmoebaBond,
+    HarmonicAngle,
+    AmoebaAngle,
+    AmoebaAngleInPlane,
+    AmoebaStretchBend,
+    AmoebaUreyBradley,
+    AmoebaOutOfPlaneBend,
+    PeriodicTorsion,
+    AmoebaStretchTorsion,
+    AmoebaAngleTorsion,
+    AmoebaPiTorsion,
+    CMAPTable,
+    CMAP,
+    AmoebaTorsionTorsion,
+    AmoebaTorsionTorsionGrid,
+    AmberCMAP,
+    AmberCMAPGrid,
 )
 from .terms.nonbonded import (
     Particle, AmoebaVdw147, Multipole,
@@ -35,17 +48,38 @@ class Box:
     gamma: float
 
 
-_CLASS_REGISTRY: Dict[str, type] = {cls.__name__: cls for cls in [
-    HarmonicBond, AmoebaBond, HarmonicAngle, AmoebaAngle,
-    AmoebaAngleInPlane, AmoebaStretchBend, AmoebaUreyBradley,
-    AmoebaOutOfPlaneBend, PeriodicTorsion, AmoebaStretchTorsion,
-    AmoebaAngleTorsion, AmoebaPiTorsion, CMAPTable, CMAP,
-    AmoebaTorsionTorsion, AmoebaTorsionTorsionGrid,
-    Particle, AmoebaVdw147, Multipole,
-    IsotropicPolarization, AnisotropicPolarization,
-    MBUCBChargePenetration, MBUCBChargeTransfer, PairList,
-    Box,
-]}
+_CLASS_REGISTRY: Dict[str, type] = {
+    cls.__name__: cls
+    for cls in [
+        HarmonicBond,
+        AmoebaBond,
+        HarmonicAngle,
+        AmoebaAngle,
+        AmoebaAngleInPlane,
+        AmoebaStretchBend,
+        AmoebaUreyBradley,
+        AmoebaOutOfPlaneBend,
+        PeriodicTorsion,
+        AmoebaStretchTorsion,
+        AmoebaAngleTorsion,
+        AmoebaPiTorsion,
+        CMAPTable,
+        CMAP,
+        AmberCMAP,
+        AmberCMAPGrid,
+        AmoebaTorsionTorsion,
+        AmoebaTorsionTorsionGrid,
+        Particle,
+        AmoebaVdw147,
+        Multipole,
+        IsotropicPolarization,
+        AnisotropicPolarization,
+        MBUCBChargePenetration,
+        MBUCBChargeTransfer,
+        PairList,
+        Box,
+    ]
+}
 
 _SQL_TYPE_MAP = {
     int: "INTEGER", str: "TEXT", float: "FLOAT",

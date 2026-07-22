@@ -42,6 +42,8 @@ from ..terms import (
     AnisotropicPolarization,
     MBUCBChargeTransfer,
     AmberNonbonded,
+    AmberCMAPGrid,
+    AmberCMAP,
 )
 
 
