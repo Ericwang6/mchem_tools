@@ -155,3 +155,29 @@ def test_bonded_atoms():
     assert testDict[angleAtoms2] == 1
     diheAtoms = angleAtoms.extend([Atom("C", "C")])
     assert angleAtoms == angleAtoms2
+
+
+def test_topological_info_for_many_disconnected_molecules():
+    """Aggregate paths without introducing links between water molecules."""
+
+    num_waters = 250
+    top = Topology("disconnected-waters")
+    with top.setEditable():
+        for residue_number in range(1, num_waters + 1):
+            residue = Residue("HOH", residue_number)
+            oxygen = Atom("O", "O")
+            hydrogen1 = Atom("H1", "H")
+            hydrogen2 = Atom("H2", "H")
+            for atom in (oxygen, hydrogen1, hydrogen2):
+                residue.addAtom(atom)
+            top.addResidue(residue)
+            top.addBond(Bond(oxygen, hydrogen1, 1))
+            top.addBond(Bond(oxygen, hydrogen2, 1))
+
+    assert len(top.bondedAtoms[1]) == 2 * num_waters
+    assert len(top.bondedAtoms[2]) == num_waters
+    assert all(not top.bondedAtoms[order] for order in (3, 4, 5))
+    assert top.connTable.shape == (3 * num_waters, 3)
+
+    for atom1, atom2, _ in top.connTable:
+        assert atom1 // 3 == atom2 // 3

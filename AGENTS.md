@@ -24,6 +24,8 @@ Optional docs extra:
 pip install -e ".[docs]"
 ```
 
+
+
 ## Code structure (`mchem/`)
 
 ```
@@ -51,7 +53,7 @@ mchem/
 └── templates/           # Residue/ion/water XML templates (protein, water, ions, ...)
 ```
 
-**Data flow (typical `convert` path):**
+**Data flow (typical** `convert` **path):**
 
 1. `fileformats.load_pdb` → `Topology`
 2. `forcefield.ForceField` parses XML and builds `Generator`s
@@ -59,24 +61,26 @@ mchem/
 4. Optional `Box` from PDB CRYST1 → `system.addTerm`
 5. `System.save` → SQLite `.db`
 
-**Data flow (typical `trjconv` path):**
+**Data flow (typical** `trjconv` **path):**
 
 1. `DBTopologyProvider(.db)` → ordered `AtomInfo` list (from the `Particle` table)
 2. `HDF5TrajectoryReader(.h5)` → `Frame` (coordinates `(natoms, 3)`, box, time)
 3. `PDBTrajectoryWriter` writes the selected frame → `.pdb`
-   (orchestrated by `mchem.trjconv.trjconv`; formats selected by file extension)
+  (orchestrated by `mchem.trjconv.trjconv`; formats selected by file extension)
 
 **Tests and fixtures:** `tests/` mirrors package concerns (`test_system.py`, `test_forcefield.py`, `test_pdb.py`, `test_trjconv.py`, …). PDB/DB/JSON fixtures live under `tests/data/`; HDF5 trajectory fixtures and their format notes live under `tests/generate_hdf5/`. Examples under `examples/`.
 
 ## Keeping this file current
 
-**Update `AGENTS.md` in the same change** whenever you alter any of the following. Do not leave the doc stale for a follow-up PR.
+**Update** `AGENTS.md` **in the same change** whenever you alter any of the following. Do not leave the doc stale for a follow-up PR.
 
-| Change type | What to update in `AGENTS.md` |
-|-------------|-------------------------------|
-| **Code structure** | `mchem/` tree (new/removed modules or packages), data-flow steps, CLI commands or entry points |
-| **Tests** | `tests/` layout, fixture locations, how to run tests, coverage expectations, CI workflow behavior |
-| **Environment** | Python version, `pyproject.toml` extras/deps, install commands, optional tools (e.g. OpenMM), CI matrix |
+
+| Change type        | What to update in `AGENTS.md`                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| **Code structure** | `mchem/` tree (new/removed modules or packages), data-flow steps, CLI commands or entry points          |
+| **Tests**          | `tests/` layout, fixture locations, how to run tests, coverage expectations, CI workflow behavior       |
+| **Environment**    | Python version, `pyproject.toml` extras/deps, install commands, optional tools (e.g. OpenMM), CI matrix |
+
 
 Also refresh the **Quick reference** table and **Project overview** bullets when install or run commands change.
 
@@ -84,15 +88,15 @@ Agents and contributors: if you move, rename, or add a top-level package area, c
 
 ## Development SOP
 
+
+
 ### 1. Test-driven development (TDD)
 
 - **Write or update tests before or alongside implementation** in `tests/`.
 - Run the full suite from the repo root:
-
   ```bash
   pytest -q
   ```
-
 - Use `pytest` fixtures (e.g. `tmp_path`) for filesystem tests; reuse `tests/data/` for golden PDB/DB inputs.
 - Dev dependencies include `pytest`, `pytest-cov`, and `openmm` (for some integration-style checks). Install with `pip install -e ".[dev]"`.
 - CI (`.github/workflows/tests.yml`) runs `pytest -q` on pushes/PRs to `master`.
@@ -105,9 +109,11 @@ Prefer small, focused tests that assert behavior (term counts, round-trip save/l
 - **Style:** Match existing code. Where there is no clear precedent, use **NumPy-style** docstrings with **reST** syntax (Sphinx Napoleon is enabled in `docs/conf.py`).
 - Document public modules, classes, and methods that appear in the API or CLI. Skip private helpers (`_prefix`) and trivial one-liners unless behavior is non-obvious.
 - Use reST for cross-references (`:class:`, `:func:`, `:meth:`), code literals, math, and notes/warnings.
-- For cross-file references in docstrings, use absolute paths (e.g. ``:class:`mchem.system.System` ``).
+- For cross-file references in docstrings, use absolute paths (e.g. `:class:`mchem.system.System`` ).
 - Do not duplicate identical docstrings in subclasses; reference the parent briefly.
 - Keep docstrings accurate and concise; update them when behavior changes.
+
+
 
 ### 3. Documentation build (`docs/`)
 
@@ -137,18 +143,23 @@ Docs are deployed via `.github/workflows/docs-gh-pages.yml` to GitHub Pages. **R
 
 ## Quick reference
 
-| Task              | Command                          |
-|-------------------|----------------------------------|
-| Install (dev)     | `pip install -e ".[dev]"`        |
-| Run tests         | `pytest -q`                      |
-| CLI help          | `mchem-tools --help`             |
-| Build docs        | `cd docs && make html`           |
-| View local docs   | open `docs/_build/html/index.html` |
+
+| Task            | Command                            |
+| --------------- | ---------------------------------- |
+| Install (dev)   | `pip install -e ".[dev]"`          |
+| Run tests       | `pytest -q`                        |
+| CLI help        | `mchem-tools --help`               |
+| Build docs      | `cd docs && make html`             |
+| View local docs | open `docs/_build/html/index.html` |
+
+
+
 
 ## Conventions for agents
 
 - Minimize diff scope; follow existing naming, dataclass patterns, and import style.
-- **Keep `AGENTS.md` in sync** with code structure, test, and environment changes in the same edit (see [Keeping this file current](#keeping-this-file-current)).
+- **Keep** `AGENTS.md` **in sync** with code structure, test, and environment changes in the same edit (see [Keeping this file current](#keeping-this-file-current)).
 - Do not commit secrets (`.env`, credentials).
 - Do not create git commits or push unless the user explicitly asks.
 - Only add tests that meaningfully cover real behavior; avoid trivial assertions.
+

@@ -164,3 +164,7 @@ jaximpl/
 tmp/
 *.db-shm
 *.db-wal
+
+# Benchmarks: large upstream inputs and generated system.db/system.pdb outputs
+/benchmarks/
+/benchmarks.tar.gz

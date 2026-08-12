@@ -345,13 +345,15 @@ class Generator:
 
     def addParameterWithAtomTypes(self, typeOrtypes, paramDict: Dict[str, Any]):
         types = typeOrtypes if isinstance(typeOrtypes, list) else [typeOrtypes]
+        param_idx = self.numParameters
         for typ in types:
-            self._with_atom_types[typ] = self.numParameters
-        self.setParameterWithIdx(paramDict, self.numParameters)
-    
+            self._with_atom_types[typ] = param_idx
+        self.setParameterWithIdx(paramDict, param_idx)
+
     def addParameterWithSmirks(self, smirks: str, paramDict: Dict[str, Any]):
-        self._with_smirks[smirks] = self.numParameters
-        self.setParameterWithIdx(paramDict, self.numParameters)
+        param_idx = self.numParameters
+        self._with_smirks[smirks] = param_idx
+        self.setParameterWithIdx(paramDict, param_idx)
         
     def setParameterWithIdx(self, paramDict: Dict[str, Any], paramIdx: int):
         self.checkParameter(paramDict)

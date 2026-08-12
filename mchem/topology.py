@@ -617,7 +617,11 @@ class Topology:
             atom.generateTopologicalInfo(self._maxConnect)
             atomTopInfo = atom.getTopologicalInfo()
             for numConnect, paths in atomTopInfo['pathToBondedAtoms'].items():
-                topInfo['bondedAtoms'][numConnect] = topInfo['bondedAtoms'][numConnect].union(paths)
+                # Mutate the aggregate set in place.  ``set.union`` creates
+                # and copies an ever-growing set for every atom, making
+                # disconnected systems such as water boxes scale
+                # quadratically with the number of atoms.
+                topInfo['bondedAtoms'][numConnect].update(paths)
             for nei, numConnect in atom.bondedAtoms.items():
                 atomPair = BondedAtoms([atom, nei])
                 topInfo['connectivity'][atomPair] = numConnect

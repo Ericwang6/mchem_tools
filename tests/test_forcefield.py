@@ -2,11 +2,26 @@ import pytest
 from mchem.system import System
 from mchem.fileformats import load_pdb
 from mchem.forcefield import ForceField
+from mchem.forcefield.base import Generator
 
 import openmm as mm
 import openmm.app as app
 
 from pprint import pprint
+
+
+def test_parameter_aliases_share_one_parameter_record():
+    generator = Generator(None, ["value"])
+    aliases = [("type-a",), ("type-b",), ("type-c",)]
+
+    generator.addParameterWithAtomTypes(aliases, {"value": 1.5})
+    generator.addParameterWithAtomTypes(("type-d",), {"value": 2.5})
+
+    assert generator.numParameters == 2
+    assert all(generator.getParameterIdxWithAtomType(alias) == 0 for alias in aliases)
+    assert generator.getParameterIdxWithAtomType(("type-d",)) == 1
+    assert generator.getParameterWithIdx(0) == {"value": 1.5}
+    assert generator.getParameterWithIdx(1) == {"value": 2.5}
 
 
 def generate_ref_omm_sys(path) -> mm.System:
@@ -57,7 +72,7 @@ def _test_angle(ommSystem: mm.System, mchemSystem: System):
 def _test_angle_in_plane(ommSystem: mm.System, mchemSystem: System):
     anglesInPlaneRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaInPlaneAngleForce":
+        if force.getName() in {"AmoebaInPlaneAngleForce", "AmoebaInPlaneAngle"}:
             num = force.getNumBonds()
             for i in range(num):
                 param = force.getBondParameters(i)
@@ -87,7 +102,7 @@ def _test_ub(ommSystem: mm.System, mchemSystem: System):
 def _test_strbnd(ommSystem: mm.System, mchemSystem: System):
     strbndsRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaStretchBendForce":
+        if force.getName() in {"AmoebaStretchBendForce", "AmoebaStretchBend"}:
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
                 strbndsRef.append(param[0])
@@ -101,7 +116,10 @@ def _test_strbnd(ommSystem: mm.System, mchemSystem: System):
 def _test_oop(ommSystem: mm.System, mchemSystem: System):
     oopsRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaOutOfPlaneBendForce":
+        if force.getName() in {
+            "AmoebaOutOfPlaneBendForce",
+            "AmoebaOutOfPlaneBend",
+        }:
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
                 oopsRef.append(list(param[0]) + list(param[1]))
@@ -129,7 +147,7 @@ def _test_oop(ommSystem: mm.System, mchemSystem: System):
 def _test_pitor(ommSystem: mm.System, mchemSystem: System):
     pitorsRef = []
     for force in ommSystem.getForces():
-        if force.getName() == "AmoebaPiTorsionForce":
+        if force.getName() in {"AmoebaPiTorsionForce", "AmoebaPiTorsion"}:
             for i in range(force.getNumBonds()):
                 param = force.getBondParameters(i)
                 pitorsRef.append(param[0])
