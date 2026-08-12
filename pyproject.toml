@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "mchem"
 version = "0.1.0"
 description = "M-Chem front-end: convert PDB to SQLite-DB formatted force-field parameters"
+readme = "README.md"
 requires-python = ">=3.9"
 
 dependencies = [
@@ -39,3 +40,12 @@ docs = [
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["mchem*"]
+
+[tool.setuptools.package-data]
+# XML force-field and residue-template files are loaded at runtime relative to
+# the package directory, so they must ship inside the wheel.
+mchem = [
+  "forcefield/*.xml",
+  "templates/*.xml",
+  "templates/*/*.xml",
+]

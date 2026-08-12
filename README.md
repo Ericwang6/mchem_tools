@@ -10,6 +10,40 @@
 
 The HTML reference (API, examples, and usage) is published automatically from the `master` branch. After the first successful deploy, open the badge above or go to **https://ericwang6.github.io/mchem_tools/**.
 
+## Installation
+
+`mchem` is not published on PyPI, but it can be installed directly from GitHub with `pip`:
+
+```bash
+pip install git+https://github.com/Ericwang6/mchem_tools.git
+```
+
+To install a specific branch, tag, or commit, append `@<ref>`:
+
+```bash
+pip install git+https://github.com/Ericwang6/mchem_tools.git@master
+```
+
+If you have SSH access to the repository, use the SSH form instead:
+
+```bash
+pip install git+ssh://git@github.com/Ericwang6/mchem_tools.git
+```
+
+Optional extras are available as usual:
+
+```bash
+pip install "mchem[dev] @ git+https://github.com/Ericwang6/mchem_tools.git"
+```
+
+The install requires Python 3.9+ and a working `git` executable. It provides the
+`mchem-tools` command-line entry point and bundles the force-field and residue
+template XML files, so no extra data download is needed:
+
+```bash
+mchem-tools --help
+```
+
 ## Local development
 
 Install with test dependencies:
