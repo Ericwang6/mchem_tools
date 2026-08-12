@@ -11,7 +11,7 @@ sys.path.insert(0, str(project_root))
 project = "mchem"
 copyright = "2024"
 author = "mchem developers"
-release = "0.1.0"
+from mchem import __version__ as release  # noqa: E402
 
 # General configuration
 extensions = [

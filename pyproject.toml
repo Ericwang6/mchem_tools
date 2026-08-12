@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "mchem"
-version = "0.1.0"
+dynamic = ["version"]
 description = "M-Chem front-end: convert PDB to SQLite-DB formatted force-field parameters"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -36,6 +36,14 @@ docs = [
   "sphinx-rtd-theme>=1.0.0",
   "sphinx-autodoc-typehints>=1.19.0",
 ]
+
+[tool.setuptools_scm]
+# The version is derived from git: an exact tag gives e.g. "0.1.0", any commit
+# past it gives e.g. "0.1.1.dev3+g027b942", so `pip install --upgrade` from git
+# can tell builds apart. Written to a generated (git-ignored) module.
+version_file = "mchem/_version.py"
+# Used when building from a tarball or a clone without tags/history.
+fallback_version = "0.0.0+unknown"
 
 [tool.setuptools.packages.find]
 where = ["."]

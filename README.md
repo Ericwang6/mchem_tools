@@ -36,6 +36,21 @@ Optional extras are available as usual:
 pip install "mchem[dev] @ git+https://github.com/Ericwang6/mchem_tools.git"
 ```
 
+### Versioning and upgrades
+
+The version is derived from git by [setuptools-scm](https://setuptools-scm.readthedocs.io/),
+so every build identifies the commit it came from: a tagged commit yields a
+plain release version such as `0.1.0`, and later commits yield
+`0.1.1.dev3+g027b942`. This means `pip` can tell two git installs apart:
+
+```bash
+pip install --upgrade git+https://github.com/Ericwang6/mchem_tools.git
+python -c "import mchem; print(mchem.__version__)"
+```
+
+Because the version is computed from git metadata, installing from a source
+copy with no `.git` directory falls back to `0.0.0+unknown`.
+
 The install requires Python 3.9+ and a working `git` executable. It provides the
 `mchem-tools` command-line entry point and bundles the force-field and residue
 template XML files, so no extra data download is needed:
