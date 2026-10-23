@@ -221,6 +221,21 @@ def solvate(
         effective_ionic = 0.0
     logger.info("Effective ionic strength: %.4f M", effective_ionic)
 
+    # --- periodic packing region ---
+    # Packmol's ``pbc`` keyword treats the orthorhombic box as periodic. This is
+    # exact along directions whose box vector has no off-diagonal component
+    # (x always; y and z for a cube). Across the other faces the periodic image
+    # is shifted, so a gap of one tolerance is kept there.
+    tolerance = 2.0
+    margin = np.zeros(3)
+    if vectors[1][0] != 0.0:
+        margin[1] = tolerance
+    if vectors[2][0] != 0.0 or vectors[2][1] != 0.0:
+        margin[2] = tolerance
+    lo = margin / 2.0
+    hi = bbox - margin / 2.0
+    pack_box = f"{lo[0]:.3f} {lo[1]:.3f} {lo[2]:.3f} {hi[0]:.3f} {hi[1]:.3f} {hi[2]:.3f}"
+
     # --- run Packmol ---
     with tempfile.TemporaryDirectory() as tmpdir:
         solute_path = os.path.join(tmpdir, "solute.pdb")
@@ -232,9 +247,10 @@ def solvate(
             f.write(_WATER_PDB)
 
         inp_lines = [
-            "tolerance 2.0",
+            f"tolerance {tolerance}",
             "filetype pdb",
             f"output {output_path}",
+            f"pbc 0. 0. 0. {bbox[0]:.3f} {bbox[1]:.3f} {bbox[2]:.3f}",
             "",
             f"structure {solute_path}",
             "  number 1",
@@ -243,7 +259,7 @@ def solvate(
             "",
             f"structure {water_path}",
             f"  number {n_water}",
-            f"  inside box 0. 0. 0. {bbox[0]:.3f} {bbox[1]:.3f} {bbox[2]:.3f}",
+            f"  inside box {pack_box}",
             "end structure",
         ]
 
@@ -259,7 +275,7 @@ def solvate(
                     "",
                     f"structure {ion_path}",
                     f"  number {ion_count}",
-                    f"  inside box 0. 0. 0. {bbox[0]:.3f} {bbox[1]:.3f} {bbox[2]:.3f}",
+                    f"  inside box {pack_box}",
                     "end structure",
                 ]
 

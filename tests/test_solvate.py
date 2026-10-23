@@ -1,5 +1,6 @@
 """Tests for solvation (Python API and CLI)."""
 
+import itertools
 import math
 import os
 import shutil
@@ -29,6 +30,27 @@ HAS_PACKMOL = shutil.which("packmol") is not None
 requires_packmol = pytest.mark.skipif(
     not HAS_PACKMOL, reason="packmol not installed"
 )
+
+
+def _count_periodic_contacts(top, positions, box_vectors, n_solute_res, cutoff):
+    """
+    Count atom pairs of different molecules closer than *cutoff*, including
+    periodic images. The first *n_solute_res* residues form one molecule.
+    """
+    from scipy.spatial import cKDTree
+
+    res_of_atom = np.repeat(
+        np.arange(top.numResidues), [res.numAtoms for res in top.residues]
+    )
+    mol_of_atom = np.maximum(res_of_atom - n_solute_res + 1, 0)
+    cell = np.array(box_vectors)
+    tree = cKDTree(positions)
+    n_contacts = 0
+    for shift in itertools.product((-1, 0, 1), repeat=3):
+        image = cKDTree(positions + np.array(shift) @ cell)
+        pairs = tree.sparse_distance_matrix(image, cutoff, output_type="ndarray")
+        n_contacts += int(np.sum(mol_of_atom[pairs["i"]] != mol_of_atom[pairs["j"]]))
+    return n_contacts
 
 
 # ---------------------------------------------------------------------------
@@ -193,6 +215,19 @@ class TestSolvateIntegration:
             top, positions, box_shape="octahedron", buffer=10.0
         )
         assert solv_top.numAtoms > top.numAtoms
+
+    @pytest.mark.parametrize("box_shape", ["cube", "dodecahedron", "octahedron"])
+    def test_no_contacts_across_periodic_boundary(self, box_shape):
+        """Molecules must not overlap with periodic images of other molecules."""
+        top = load_pdb(str(DATA_DIR / "ace_ala_nme.pdb"))
+
+        solv_top, solv_pos, box_vectors = solvate(
+            top, top.coordinates, box_shape=box_shape, buffer=10.0
+        )
+        n_contacts = _count_periodic_contacts(
+            solv_top, solv_pos, box_vectors, top.numResidues, 1.5
+        )
+        assert n_contacts == 0
 
     def test_solvate_with_ionic_strength(self):
         top = load_pdb(str(DATA_DIR / "ace_ala_nme.pdb"))

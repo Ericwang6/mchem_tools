@@ -11,8 +11,10 @@ Prerequisites
 
 - The CLI is installed as **mchem-tools** (see the project's installation
   instructions). Run ``mchem-tools --help`` to see available commands.
-- For the **solvate** command, **Packmol** must be installed and on your
-  ``PATH``. The **convert** command does not require external binaries.
+- For the **solvate** command, **Packmol** 21.1.0 or later must be installed
+  and on your ``PATH`` (e.g. ``conda install -c conda-forge packmol``). Older
+  versions do not accept the ``-i`` option. The **convert** command does not
+  require external binaries.
 
 Input PDB requirements
 ----------------------
@@ -122,14 +124,18 @@ The ``solvate`` command (implemented in :mod:`mchem.solvate` and invoked from
 
 - **Packmol**: The external `Packmol <https://github.com/leandromartinez98/packmol>`_
   program is run to place one fixed solute, N waters, and ions inside the box
-  (default tolerance 2.0 Å).
+  (default tolerance 2.0 Å). Packmol packs with periodic boundary conditions
+  (``pbc``), so molecules do not overlap with periodic images across the box
+  faces. For dodecahedron and octahedron boxes, the faces whose periodic images
+  are shifted keep a gap of one tolerance.
 
 - **Output**: The combined solvated structure is read from Packmol’s output
   PDB; the CLI writes it to your output path with
   :func:`mchem.fileformats.pdb.write_pdb`, including box vectors as a CRYST1
   record.
 
-Packmol must be installed and on your ``PATH`` for ``solvate`` to succeed.
+Packmol 21.1.0 or later must be installed and on your ``PATH`` for
+``solvate`` to succeed.
 
 What the convert command does
 -----------------------------
