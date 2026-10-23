@@ -229,3 +229,22 @@ class AmoebaTorsionTorsion:
     gridIdx: int
     nx: int
     ny: int
+
+
+@dataclass
+class AmberCMAPGrid:
+    gridIdx: int
+    grid: str
+
+
+@dataclass
+class AmberCMAP:
+    gridIdx: int
+    p0: int
+    p1: int
+    p2: int
+    p3: int
+    p4: int
+    p5: int
+    p6: int
+    p7: int
